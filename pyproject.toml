@@ -6,7 +6,9 @@ authors = ["Jon Herron <jon.herron@yahoo.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-Flask = "^2.2.2"
+Flask = "*"
+
+cmd-proxy_xero = {develop = true, path = "/home/jon/dev/cmd-proxy_xero"}
 
 [tool.poetry.dev-dependencies]
 
