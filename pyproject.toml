@@ -8,6 +8,7 @@ authors = ["Jon Herron <jon.herron@yahoo.com>"]
 python = "^3.10"
 Flask = "*"
 
+connector-bamboohr = {develop = true, path = "/home/jon/dev/connector-bamboohr"}
 connector-xero = {develop = true, path = "/home/jon/dev/connector-xero"}
 
 [tool.poetry.dev-dependencies]
