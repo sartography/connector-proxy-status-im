@@ -11,7 +11,7 @@ def load_plugins():
 @app.route('/v1/commands')
 def list_commands():
     def describe_command(plugin_name, command_name, command):
-        parameters = PluginService.command_params_desc(command)
+        parameters = PluginService.command_params_desc(command.__init__)
         plugin_display_name = PluginService.plugin_display_name(plugin_name)
         command_id = PluginService.command_id(plugin_name, command_name)
         return { 'id': command_id, 'parameters': parameters }
@@ -33,7 +33,7 @@ def do_command(plugin_display_name, command_name):
         return Response('Command not found', status=404)
 
     params = request.args.to_dict()
-    result = command(**params)
+    result = command(**params).execute()
 
     return Response(result['response'], status=result['status'], mimetype=result['mimetype'])
 
@@ -107,8 +107,9 @@ class PluginService:
     @staticmethod
     def commands_for_plugin(plugin_name, plugin):
         for module_name, module in PluginService.modules_for_plugin(plugin):
-            for member_name, member in inspect.getmembers(module, inspect.isfunction):
+            for member_name, member in inspect.getmembers(module, inspect.isclass):
                 if member.__module__ == module_name:
+                    # TODO check if class has an execute method before yielding
                     yield member_name, member
 
     @staticmethod
