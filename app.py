@@ -45,7 +45,7 @@ import types
 import typing
 
 class PluginService:
-    PLUGIN_PREFIX = 'cmd_proxy_'
+    PLUGIN_PREFIX = 'connector_proxy_'
 
     @staticmethod
     def plugin_display_name(plugin_name):
