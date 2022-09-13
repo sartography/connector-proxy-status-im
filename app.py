@@ -42,6 +42,7 @@ import importlib
 import inspect
 import pkgutil
 import types
+import typing
 
 class PluginService:
     PLUGIN_PREFIX = 'cmd_proxy_'
@@ -133,7 +134,7 @@ class PluginService:
             annotation_types = set(
                 map(
                     lambda t: t if t in supported_types else unsupported_type_marker,
-                    get_args(annotation),
+                    typing.get_args(annotation),
                 )
             )
 
@@ -155,7 +156,7 @@ class PluginService:
     @staticmethod
     def command_params_desc(command):
         sig = inspect.signature(command)
-        params_to_skip = ['self', 'kwargs'] # TODO no self if staying with function
+        params_to_skip = ['self', 'kwargs']
         sig_params = filter(
             lambda param: param.name not in params_to_skip, sig.parameters.values()
         )
@@ -166,4 +167,4 @@ class PluginService:
         return params
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='localhost', port=5000)
