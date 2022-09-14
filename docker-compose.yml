@@ -11,10 +11,10 @@ services:
       - FLASK_DEBUG=0
       - FLASK_SESSION_SECRET_KEY=${FLASK_SESSION_SECRET_KEY:-super_secret_key}
     ports:
-      - "7003:7003"
+      - "7004:7004"
     network_mode: host
     healthcheck:
-      test: curl localhost:7003/liveness --fail
+      test: curl localhost:7004/liveness --fail
       interval: 10s
       timeout: 5s
       retries: 20
