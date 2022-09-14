@@ -8,6 +8,10 @@ app = Flask(__name__)
 def load_plugins():
     print('load the plugins once here?')
 
+@app.route('/liveness')
+def status():
+    return Response(json.dumps({"ok": True}), status=200, mimetype='application/json')
+
 @app.route('/v1/commands')
 def list_commands():
     def describe_command(plugin_name, command_name, command):

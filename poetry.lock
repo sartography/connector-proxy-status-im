@@ -91,6 +91,20 @@ async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "gunicorn"
+version = "20.1.0"
+description = "WSGI HTTP Server for UNIX"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.extras]
+eventlet = ["eventlet (>=0.24.1)"]
+gevent = ["gevent (>=1.4.0)"]
+setproctitle = ["setproctitle"]
+tornado = ["tornado (>=0.2)"]
+
+[[package]]
 name = "idna"
 version = "3.4"
 description = "Internationalized Domain Names in Applications (IDNA)"
@@ -208,7 +222,7 @@ urllib3 = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "ded9e44a1043bbd1fdb5424ab65ba440d4c457559c54d337075a589e5d96caf1"
+content-hash = "2e83707e8bd2dc5fa76bbe5f3394f4e6e181c04acb5976e09e8a4898d6761101"
 
 [metadata.files]
 certifi = []
@@ -224,6 +238,10 @@ colorama = [
 connector-bamboohr = []
 connector-xero = []
 flask = []
+gunicorn = [
+    {file = "gunicorn-20.1.0-py3-none-any.whl", hash = "sha256:9dcc4547dbb1cb284accfb15ab5667a0e5d1881cc443e0677b4882a4067a807e"},
+    {file = "gunicorn-20.1.0.tar.gz", hash = "sha256:e0a968b5ba15f8a328fdfd7ab1fcb5af4470c28aaf7e55df02a99bc13138e6e8"},
+]
 idna = []
 itsdangerous = [
     {file = "itsdangerous-2.1.2-py3-none-any.whl", hash = "sha256:2c2349112351b88699d8d4b6b075022c0808887cb7ad10069318a8b0bc88db44"},

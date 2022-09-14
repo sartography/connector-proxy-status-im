@@ -10,6 +10,7 @@ Flask = "*"
 
 connector-xero = {git = "https://github.com/jbirddog/connector-xero", rev = "main"}
 connector-bamboohr = {git = "https://github.com/jbirddog/connector-bamboohr", rev = "main"}
+gunicorn = "^20.1.0"
 
 [tool.poetry.dev-dependencies]
 
