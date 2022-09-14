@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "connector-proxy"
+name = "spiffworkflow-connector-proxy"
 version = "0.1.0"
 description = ""
 authors = ["Jon Herron <jon.herron@yahoo.com>"]
@@ -8,8 +8,8 @@ authors = ["Jon Herron <jon.herron@yahoo.com>"]
 python = "^3.10"
 Flask = "*"
 
-connector-bamboohr = {develop = true, path = "/home/jon/dev/connector-bamboohr"}
-connector-xero = {develop = true, path = "/home/jon/dev/connector-xero"}
+connector-xero = {git = "https://github.com/jbirddog/connector-xero", rev = "main"}
+connector-bamboohr = {git = "https://github.com/jbirddog/connector-bamboohr", rev = "main"}
 
 [tool.poetry.dev-dependencies]
 
