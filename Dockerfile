@@ -4,7 +4,7 @@ RUN pip install poetry
 RUN useradd _gunicorn --no-create-home --user-group
 
 WORKDIR /app
-COPY pyproject.toml poetry.lock /app/
+COPY pyproject.toml poetry.lock connectors/ /app/
 RUN poetry install
 
 RUN set -xe \
