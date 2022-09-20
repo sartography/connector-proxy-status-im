@@ -1,16 +1,12 @@
 [tool.poetry]
-name = "spiffworkflow-connector-proxy"
+name = "connector-bamboohr"
 version = "0.1.0"
 description = ""
 authors = ["Jon Herron <jon.herron@yahoo.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-Flask = "*"
-
-connector-xero = {develop=true, path="connectors/connector-xero"}
-connector-bamboohr = {develop=true, path="connectors/connector-bamboohr"}
-gunicorn = "^20.1.0"
+requests = "^2.28.1"
 
 [tool.poetry.dev-dependencies]
 
