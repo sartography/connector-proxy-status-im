@@ -17,3 +17,10 @@ class OAuth:
                     "accounting.reports.read accounting.journals.read accounting.settings "
                     "accounting.contacts accounting.attachments assets projects",
         }
+
+    @staticmethod
+    def filtered_params(params):
+        return {
+            "client_id": params["client_id"],
+            "client_secret": params["client_secret"],
+        }
