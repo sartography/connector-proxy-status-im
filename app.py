@@ -1,6 +1,6 @@
 import json
 
-from flask import Flask, Response, request, url_for
+from flask import Flask, Response, redirect, request, session, url_for
 from flask_oauthlib.contrib.client import OAuth
 
 app = Flask(__name__)
@@ -36,32 +36,53 @@ def list_auths():
 def list_commands():
     return list_targets(PluginService.available_commands_by_plugin())
 
+def auth_handler(plugin_display_name, auth_name, handler_params):
+    auth = PluginService.auth_named(plugin_display_name, auth_name)
+    if auth is not None:
+        app_description = auth(**handler_params).app_description()
+
+        # TODO right now this assumes Oauth. would need to expand if other auth providers are used
+        handler = OAuth(app).remote_app(**app_description)
+
+        @handler.tokengetter
+        def tokengetter():
+            pass
+
+        @handler.tokensaver
+        def tokensaver(token):
+            pass
+
+        return handler
+
 @app.route('/v1/auth/<plugin_display_name>/<auth_name>')
 def do_auth(plugin_display_name, auth_name):
-    auth = PluginService.auth_named(plugin_display_name, auth_name)
-    if auth is None:
+    handler_params = request.args.to_dict()
+    handler = auth_handler(plugin_display_name, auth_name, handler_params)
+    if handler is None:
         return Response('Auth not found', status=404)
 
-    params = request.args.to_dict()
+    # TODO factor into handler
+    session['client_id'] = handler_params['client_id']
+    session['client_secret'] = handler_params['client_secret']
 
-    # TODO right now this assumes Oauth. would need to expand if other auth providers are used
-    app_description = auth(**params).app_description()
-    remote_app = OAuth(app).remote_app(**app_description)
     redirect_url = url_for('auth_callback', plugin_display_name=plugin_display_name, auth_name=auth_name, _external=True)
 
-    @remote_app.tokengetter
-    def tokengetter():
-        pass
-
-    @remote_app.tokensaver
-    def tokensaver(token):
-        pass
-
-    return remote_app.authorize(callback_uri=redirect_url)
+    return handler.authorize(callback_uri=redirect_url)
 
 @app.route('/v1/auth/<plugin_display_name>/<auth_name>/callback')
 def auth_callback(plugin_display_name, auth_name):
-    pass
+    # TODO factor into handler
+    handler_params = {
+        'client_id': session['client_id'],
+        'client_secret': session['client_secret']
+    }
+    handler = auth_handler(plugin_display_name, auth_name, handler_params)
+    if handler is None:
+        return Response('Auth not found', status=404)
+
+    response = handler.authorized_response()
+
+    return redirect('http://localhost:5000/proxy_callback?response=' + json.dumps(response))
 
 @app.route('/v1/do/<plugin_display_name>/<command_name>')
 def do_command(plugin_display_name, command_name):
