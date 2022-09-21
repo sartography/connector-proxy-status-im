@@ -16,7 +16,6 @@ def status():
 def list_commands():
     def describe_command(plugin_name, command_name, command):
         parameters = PluginService.command_params_desc(command.__init__)
-        plugin_display_name = PluginService.plugin_display_name(plugin_name)
         command_id = PluginService.command_id(plugin_name, command_name)
         return { 'id': command_id, 'parameters': parameters }
 
@@ -96,11 +95,11 @@ class PluginService:
             return None
 
     @staticmethod
-    def modules_for_plugin(plugin):
+    def modules_for_plugin_in_package(plugin, package_name):
         for finder, name, ispkg in pkgutil.iter_modules(plugin.__path__):
-            if ispkg and name.startswith(PluginService.PLUGIN_PREFIX):
+            if ispkg and name == package_name:
                 sub_pkg = finder.find_module(name).load_module(name)
-                yield from PluginService.modules_for_plugin(sub_pkg)
+                yield from PluginService.modules_for_plugin_in_package(sub_pkg, None)
             else:
                 spec = finder.find_spec(name)
                 if spec is not None and spec.loader is not None:
@@ -110,7 +109,7 @@ class PluginService:
 
     @staticmethod
     def commands_for_plugin(plugin_name, plugin):
-        for module_name, module in PluginService.modules_for_plugin(plugin):
+        for module_name, module in PluginService.modules_for_plugin_in_package(plugin, 'commands'):
             for member_name, member in inspect.getmembers(module, inspect.isclass):
                 if member.__module__ == module_name:
                     # TODO check if class has an execute method before yielding
