@@ -6,11 +6,13 @@ authors = ["Jon Herron <jon.herron@yahoo.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-Flask = "*"
+Flask = "^2.2.2"
 
 connector-xero = {develop=true, path="connectors/connector-xero"}
 connector-bamboohr = {develop=true, path="connectors/connector-bamboohr"}
 gunicorn = "^20.1.0"
+Flask-OAuthlib = "^0.9.6"
+Flask-Session = "^0.4.0"
 
 [tool.poetry.dev-dependencies]
 

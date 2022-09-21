@@ -1,8 +1,14 @@
 import json
 
-from flask import Flask, Response, request
+from flask import Flask, Response, request, url_for
+from flask_oauthlib.contrib.client import OAuth
 
 app = Flask(__name__)
+
+app.config.from_pyfile('config.py', silent=True)
+
+if app.config['ENV'] != 'production':
+    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 @app.before_first_request
 def load_plugins():
@@ -12,22 +18,50 @@ def load_plugins():
 def status():
     return Response(json.dumps({"ok": True}), status=200, mimetype='application/json')
 
-@app.route('/v1/commands')
-def list_commands():
-    def describe_command(plugin_name, command_name, command):
-        parameters = PluginService.command_params_desc(command.__init__)
-        command_id = PluginService.command_id(plugin_name, command_name)
-        return { 'id': command_id, 'parameters': parameters }
-
-    commands_by_plugin = PluginService.available_commands_by_plugin()
+def list_targets(targets):
     descriptions = []
 
-    for plugin_name, commands in commands_by_plugin.items():
-        for command_name, command in commands.items():
-            description = describe_command(plugin_name, command_name, command)
+    for plugin_name, plugin_targets in targets.items():
+        for target_name, target in plugin_targets.items():
+            description = PluginService.describe_target(plugin_name, target_name, target)
             descriptions.append(description)
 
     return Response(json.dumps(descriptions), status=200, mimetype='application/json')
+
+@app.route('/v1/auths')
+def list_auths():
+    return list_targets(PluginService.available_auths_by_plugin())
+
+@app.route('/v1/commands')
+def list_commands():
+    return list_targets(PluginService.available_commands_by_plugin())
+
+@app.route('/v1/auth/<plugin_display_name>/<auth_name>')
+def do_auth(plugin_display_name, auth_name):
+    auth = PluginService.auth_named(plugin_display_name, auth_name)
+    if auth is None:
+        return Response('Auth not found', status=404)
+
+    params = request.args.to_dict()
+
+    # TODO right now this assumes Oauth. would need to expand if other auth providers are used
+    app_description = auth(**params).app_description()
+    remote_app = OAuth(app).remote_app(**app_description)
+    redirect_url = url_for('auth_callback', plugin_display_name=plugin_display_name, auth_name=auth_name, _external=True)
+
+    @remote_app.tokengetter
+    def tokengetter():
+        pass
+
+    @remote_app.tokensaver
+    def tokensaver(token):
+        pass
+
+    return remote_app.authorize(callback_uri=redirect_url)
+
+@app.route('/v1/auth/<plugin_display_name>/<auth_name>/callback')
+def auth_callback(plugin_display_name, auth_name):
+    pass
 
 @app.route('/v1/do/<plugin_display_name>/<command_name>')
 def do_command(plugin_display_name, command_name):
@@ -68,21 +102,43 @@ class PluginService:
         }
 
     @staticmethod
-    def available_commands_by_plugin():
+    def available_auths_by_plugin():
         return {
                 plugin_name: {
-                    command_name: command 
-                    for command_name, command 
-                    in PluginService.commands_for_plugin(plugin_name, plugin) 
+                    auth_name: auth
+                    for auth_name, auth
+                    in PluginService.auths_for_plugin(plugin_name, plugin)
                 } 
-            for plugin_name, plugin
-            in PluginService.available_plugins().items()
+                for plugin_name, plugin
+                in PluginService.available_plugins().items()
         }
 
     @staticmethod
-    def command_id(plugin_name, command_name):
+    def available_commands_by_plugin():
+        return {
+                plugin_name: {
+                    command_name: command
+                    for command_name, command
+                    in PluginService.commands_for_plugin(plugin_name, plugin)
+                } 
+                for plugin_name, plugin
+                in PluginService.available_plugins().items()
+        }
+
+    @staticmethod
+    def target_id(plugin_name, target_name):
         plugin_display_name = PluginService.plugin_display_name(plugin_name)
-        return f'{plugin_display_name}/{command_name}'
+        return f'{plugin_display_name}/{target_name}'
+
+    @staticmethod
+    def auth_named(plugin_display_name, auth_name):
+        plugin_name = PluginService.plugin_name_from_display_name(plugin_display_name)
+        available_auths_by_plugin = PluginService.available_auths_by_plugin()
+
+        try:
+            return available_auths_by_plugin[plugin_name][auth_name]
+        except:
+            return None
 
     @staticmethod
     def command_named(plugin_display_name, command_name):
@@ -108,12 +164,20 @@ class PluginService:
                     yield name, module
 
     @staticmethod
-    def commands_for_plugin(plugin_name, plugin):
-        for module_name, module in PluginService.modules_for_plugin_in_package(plugin, 'commands'):
+    def targets_for_plugin(plugin_name, plugin, target_package_name):
+        for module_name, module in PluginService.modules_for_plugin_in_package(plugin, target_package_name):
             for member_name, member in inspect.getmembers(module, inspect.isclass):
                 if member.__module__ == module_name:
-                    # TODO check if class has an execute method before yielding
                     yield member_name, member
+
+    @staticmethod
+    def auths_for_plugin(plugin_name, plugin):
+        yield from PluginService.targets_for_plugin(plugin_name, plugin, 'auths')
+
+    @staticmethod
+    def commands_for_plugin(plugin_name, plugin):
+        # TODO check if class has an execute method before yielding
+        yield from PluginService.targets_for_plugin(plugin_name, plugin, 'commands')
 
     @staticmethod
     def param_annotation_desc(param):
@@ -158,8 +222,8 @@ class PluginService:
         return {"id": param_id, "type": param_type_desc, "required": param_req}
 
     @staticmethod
-    def command_params_desc(command):
-        sig = inspect.signature(command)
+    def callable_params_desc(kallable):
+        sig = inspect.signature(kallable)
         params_to_skip = ['self', 'kwargs']
         sig_params = filter(
             lambda param: param.name not in params_to_skip, sig.parameters.values()
@@ -169,6 +233,13 @@ class PluginService:
         ]
 
         return params
+
+    @staticmethod
+    def describe_target(plugin_name, target_name, target):
+        parameters = PluginService.callable_params_desc(target.__init__)
+        target_id = PluginService.target_id(plugin_name, target_name)
+        return {'id': target_id, 'parameters': parameters}
+
 
 if __name__ == '__main__':
     app.run(host='localhost', port=5000)
