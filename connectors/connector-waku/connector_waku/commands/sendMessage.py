@@ -1,44 +1,31 @@
 import json
 import requests
+from dataclasses import dataclass
 
-#
-# Sample response
-#
 
-# {
-#    "amount": "65000.00",
-#    "currency": "USD",
-#    "id": "4",
-#    "payRate": "65000.00 USD"
-# }
-
+@dataclass
 class SendMessage:
-    def __init__(self, message: str, message_type: str, recipient: str):
-        self.message = message
-        self.message_type = message_type
-        self.recipient = recipient
+    message: str
+    message_type: str
+    recipient: str
 
     def execute(self):
         url = f'http://localhost:7005/sendMessage'
         headers = {'Accept': 'application/json', 'Content-type': 'application/json'}
-        request_body = {"message": "new_message2", "recipient": "testrramos", "message_type": "public"}
+        request_body = {"message": self.message, "recipient": self.recipient, "message_type": self.message_type}
 
         status_code = None
         try:
             raw_response = requests.post(url, json.dumps(request_body), headers=headers)
             status_code = raw_response.status_code
             parsed_response = json.loads(raw_response.text)
-            # pay_rate = parsed_response['payRate']
-            # pay_rate_parts = pay_rate.split(' ')
-            # parsed_response['amount'] = pay_rate_parts[0]
-            # parsed_response['currency'] = pay_rate_parts[1]
             response = json.dumps(parsed_response)
         except Exception as ex:
-            response = f'{ "error": "{ex}" }'
+            response = json.dumps({"error": str(ex)})
 
         return {
             'response': response,
-            'status_code': status_code,
             'node_returned_200': True,
+            'status': status_code,
             'mimetype': 'application/json'
         }
