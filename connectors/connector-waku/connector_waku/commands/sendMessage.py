@@ -1,6 +1,7 @@
 import json
 import requests
 from dataclasses import dataclass
+from flask import current_app
 
 
 @dataclass
@@ -10,7 +11,7 @@ class SendMessage:
     recipient: str
 
     def execute(self):
-        url = f'http://localhost:7005/sendMessage'
+        url = f'{current_app.config["WAKU_PROXY_BASE_URL"]}/sendMessage'
         headers = {'Accept': 'application/json', 'Content-type': 'application/json'}
         request_body = {"message": self.message, "recipient": self.recipient, "message_type": self.message_type}
 
