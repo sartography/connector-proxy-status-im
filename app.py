@@ -93,12 +93,24 @@ def auth_callback(plugin_display_name, auth_name):
 def do_command(plugin_display_name, command_name):
     command = PluginService.command_named(plugin_display_name, command_name)
     if command is None:
-        return Response('Command not found', status=404)
+        return json_error_response(f'Command not found: {plugin_display_name}:{command_name}', status=404)
 
     params = request.args.to_dict()
-    result = command(**params).execute()
+    try:
+        result = command(**params).execute()
+    except Exception as e:
+        return json_error_response(f'Error encountered when executing {plugin_display_name}:{command_name} {str(e)}',
+                        status=404)
 
-    return Response(result['response'], status=result['status'], mimetype=result['mimetype'])
+    return Response(result['response'], mimetype=result['mimetype'], status=200)
+
+def json_error_response(message, status):
+    resp = {
+        'error':message,
+        'status':status
+    }
+    return Response(json.dumps(resp), status=status)
+
 
 # TODO move out to own home
 import importlib
