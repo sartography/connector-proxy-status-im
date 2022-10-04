@@ -11,6 +11,7 @@ Flask = "^2.2.2"
 connector-xero = {develop=true, path="connectors/connector-xero"}
 connector-bamboohr = {develop=true, path="connectors/connector-bamboohr"}
 connector-waku = {develop=true, path="connectors/connector-waku"}
+connector-aws = {develop=true, path="connectors/connector-aws"}
 gunicorn = "^20.1.0"
 Flask-OAuthlib = "^0.9.6"
 Flask-Session = "^0.4.0"
