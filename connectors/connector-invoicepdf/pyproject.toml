@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "connector-invoicepdf"
+version = "0.1.0"
+description = ""
+authors = ["Jon Herron <jon.herron@yahoo.com>"]
+readme = "README.md"
+packages = [{include = "connector_invoicepdf"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+connector-aws = {develop=true, path="../connector-aws"}
+connector-createpdf = {develop=true, path="../connector-createpdf"}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

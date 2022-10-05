@@ -6,7 +6,7 @@ authors = ["Dan Funk <dan@sartography.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-boto3 = "^1.27.81"
+boto3 = "^1.24"
 
 [tool.poetry.dev-dependencies]
 
