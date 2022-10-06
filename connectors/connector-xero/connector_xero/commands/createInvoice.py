@@ -133,8 +133,6 @@ from xero_python.api_client.serializer import serialize
 
 class CreateInvoice:
     def __init__(self, 
-        client_id: str, 
-        client_secret: str, 
         access_token, 
 
         description: str,
@@ -147,16 +145,16 @@ class CreateInvoice:
         #due_date: str,
         #account_code: str,
     ):
-        self.client_id = client_id
-        self.client_secret = client_secret
         self.access_token = access_token
         self.description = description
         self.contact_name = contact_name
         self.contact_email = contact_email
         self.amount = amount
 
-    def execute(self):
+    def execute(self, config):
         """Creates an invoice in xero."""
+        client_id = config['XERO_CLIENT_ID']
+        client_secret = config['XERO_CLIENT_SECRET']
 
         access_token = json.loads(self.access_token)
 
@@ -164,7 +162,7 @@ class CreateInvoice:
             Configuration(
                 debug=True,
                 oauth2_token=OAuth2Token(
-                    client_id=self.client_id, client_secret=self.client_secret
+                    client_id=sclient_id, client_secret=client_secret
                 ),
             ),
             pool_threads=1,

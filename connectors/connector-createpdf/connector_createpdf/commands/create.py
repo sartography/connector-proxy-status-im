@@ -5,7 +5,7 @@ class CreatePDF:
     def __init__(self, template: str):
         self.template = template
 
-    def execute(self):
+    def execute(self, config):
         buf = BytesIO()
 
         pisa_status = pisa.CreatePDF(self.template, dest=buf)

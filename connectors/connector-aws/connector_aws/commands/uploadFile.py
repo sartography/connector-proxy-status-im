@@ -23,7 +23,7 @@ class UploadFileData:
         self.bucket = bucket
         self.object_name = object_name
 
-    def execute(self):
+    def execute(self, config):
 
         # Upload the file
         try:
