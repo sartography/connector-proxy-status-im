@@ -18,7 +18,7 @@ class GetPayRate:
         self.subdomain = subdomain
         self.employee_id = employee_id
 
-    def execute(self):
+    def execute(self, config):
         url = f'https://api.bamboohr.com/api/gateway.php/{self.subdomain}/v1/employees/{self.employee_id}'
         headers = {'Accept': 'application/json'}
         params = {'fields': 'payRate', 'onlyCurrent': 'true'}

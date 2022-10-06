@@ -97,7 +97,7 @@ def do_command(plugin_display_name, command_name):
 
     params = request.args.to_dict()
     try:
-        result = command(**params).execute()
+        result = command(**params).execute(app.config)
     except Exception as e:
         return json_error_response(f'Error encountered when executing {plugin_display_name}:{command_name} {str(e)}',
                         status=404)

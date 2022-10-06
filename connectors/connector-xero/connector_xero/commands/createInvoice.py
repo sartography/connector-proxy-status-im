@@ -155,7 +155,7 @@ class CreateInvoice:
         self.contact_email = contact_email
         self.amount = amount
 
-    def execute(self):
+    def execute(self, config):
         """Creates an invoice in xero."""
 
         access_token = json.loads(self.access_token)
