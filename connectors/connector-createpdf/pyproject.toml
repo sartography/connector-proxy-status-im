@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "connector-createpdf"
+version = "0.1.0"
+description = ""
+authors = ["Jon Herron <jon.herron@yahoo.com>"]
+readme = "README.md"
+packages = [{include = "connector_createpdf"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+xhtml2pdf = "^0.2.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
