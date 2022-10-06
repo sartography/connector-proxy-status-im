@@ -1,12 +1,11 @@
+import json
 from connector_aws.commands.uploadFile import UploadFileData
 from connector_createpdf.commands.create import CreatePDF
 
 class CreateAndUploadToS3:
-    def __init__(self, template: str, name: str, amount: str, aws_object_name: str):
+    def __init__(self, template: str, aws_object_name: str):
         
         self.template = template
-        self.name = name
-        self.amount = amount
         self.aws_object_name = aws_object_name
 
     def execute(self, config):
@@ -14,8 +13,7 @@ class CreateAndUploadToS3:
         aws_secret_access_key = config['AWS_SECRET_ACCESS_KEY']
         aws_bucket = config['AWS_INVOICE_S3_BUCKET']
 
-        pdf_data = self.template.format(name=self.name, amount=self.amount)
-        pdf_result = CreatePDF(pdf_data).execute(config)
+        pdf_result = CreatePDF(self.template).execute(config)
 
         if pdf_result['status'] != '200':
             return {
