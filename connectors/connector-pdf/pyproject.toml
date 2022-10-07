@@ -10,6 +10,7 @@ packages = [{include = "connector_pdf"}]
 python = "^3.10"
 xhtml2pdf = "^0.2.8"
 
+connector-aws = {develop=true, path="../connector-aws"}
 
 [build-system]
 requires = ["poetry-core"]

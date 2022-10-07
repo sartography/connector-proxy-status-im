@@ -151,6 +151,7 @@ python-versions = "^3.10"
 develop = true
 
 [package.dependencies]
+connector-aws = {path = "../connector-aws", develop = true}
 xhtml2pdf = "^0.2.8"
 
 [package.source]
