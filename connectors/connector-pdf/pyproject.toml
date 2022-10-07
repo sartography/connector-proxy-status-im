@@ -1,10 +1,10 @@
 [tool.poetry]
-name = "connector-createpdf"
+name = "connector-pdf"
 version = "0.1.0"
 description = ""
 authors = ["Jon Herron <jon.herron@yahoo.com>"]
 readme = "README.md"
-packages = [{include = "connector_createpdf"}]
+packages = [{include = "connector_pdf"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"

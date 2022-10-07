@@ -22,3 +22,7 @@ class CreatePDF:
             'status': '200',
             'mimetype': 'application/pdf',
         }
+
+class CreatePDFandUploadToS3:
+    def __init__(self, ok: str):
+        pass

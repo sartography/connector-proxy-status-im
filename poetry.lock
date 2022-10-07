@@ -22,14 +22,14 @@ python-versions = "*"
 
 [[package]]
 name = "boto3"
-version = "1.24.87"
+version = "1.24.88"
 description = "The AWS SDK for Python"
 category = "main"
 optional = false
 python-versions = ">= 3.7"
 
 [package.dependencies]
-botocore = ">=1.27.87,<1.28.0"
+botocore = ">=1.27.88,<1.28.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.6.0,<0.7.0"
 
@@ -38,7 +38,7 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.27.87"
+version = "1.27.88"
 description = "Low-level, data-driven core of boto 3."
 category = "main"
 optional = false
@@ -142,7 +142,7 @@ type = "directory"
 url = "connectors/connector-bamboohr"
 
 [[package]]
-name = "connector-createpdf"
+name = "connector-pdf"
 version = "0.1.0"
 description = ""
 category = "main"
@@ -155,24 +155,7 @@ xhtml2pdf = "^0.2.8"
 
 [package.source]
 type = "directory"
-url = "connectors/connector-createpdf"
-
-[[package]]
-name = "connector-invoicepdf"
-version = "0.1.0"
-description = ""
-category = "main"
-optional = false
-python-versions = "^3.10"
-develop = true
-
-[package.dependencies]
-connector-aws = {path = "../connector-aws", develop = true}
-connector-createpdf = {path = "../connector-createpdf", develop = true}
-
-[package.source]
-type = "directory"
-url = "connectors/connector-invoicepdf"
+url = "connectors/connector-pdf"
 
 [[package]]
 name = "connector-waku"
@@ -786,7 +769,7 @@ svglib = ">=1.2.1"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "03e73e846ddbc70a657ff432e56b08f8b956ba911e972118fef7f8d718c7f55b"
+content-hash = "d154d791d6de9a0df511c3c861125c68e55c3768e3ebe5e25bd6fbbd956557c6"
 
 [metadata.files]
 arabic-reshaper = [
@@ -799,12 +782,12 @@ asn1crypto = [
     {file = "asn1crypto-1.5.1.tar.gz", hash = "sha256:13ae38502be632115abf8a24cbe5f4da52e3b5231990aff31123c805306ccb9c"},
 ]
 boto3 = [
-    {file = "boto3-1.24.87-py3-none-any.whl", hash = "sha256:bcc579e801774cb2c7dda87ff985feda1ae7e10591d11ef37526363139138bd4"},
-    {file = "boto3-1.24.87.tar.gz", hash = "sha256:3dd7ed74d1d29dd8094a078be86ed61c45de6638fe18856f7a1ff9282b4d929e"},
+    {file = "boto3-1.24.88-py3-none-any.whl", hash = "sha256:6b4cf1cd0be65202c4cf0e4c69099bac3620bcd4049ca25a5e223c668401dd69"},
+    {file = "boto3-1.24.88.tar.gz", hash = "sha256:93934343cac76084600a520e5be70c52152364d0c410681c2e25c2290f0e151c"},
 ]
 botocore = [
-    {file = "botocore-1.27.87-py3-none-any.whl", hash = "sha256:c4cbd22056ace4c7aa99e62e8ae629865ab80cc8bbf7c6d68ccf0f768f0034b6"},
-    {file = "botocore-1.27.87.tar.gz", hash = "sha256:216de9751116d0d1cc3901e26d95a5c9a30ecb6973ae6147af1cf504858d845a"},
+    {file = "botocore-1.27.88-py3-none-any.whl", hash = "sha256:de4e087b24cd3bc369eb2e27f8fe94a6499f7dea08c919fba13cefb2496bd2bb"},
+    {file = "botocore-1.27.88.tar.gz", hash = "sha256:ded0a4035baf91eb358ef501c92a8512543f5ab7658f459df3077a70a555b5cd"},
 ]
 cachelib = [
     {file = "cachelib-0.9.0-py3-none-any.whl", hash = "sha256:811ceeb1209d2fe51cd2b62810bd1eccf70feba5c52641532498be5c675493b3"},
@@ -894,8 +877,7 @@ colorama = [
 ]
 connector-aws = []
 connector-bamboohr = []
-connector-createpdf = []
-connector-invoicepdf = []
+connector-pdf = []
 connector-waku = []
 connector-xero = []
 cryptography = [
