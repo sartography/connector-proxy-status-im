@@ -1,41 +1,60 @@
+import importlib
+import inspect
 import json
 import os
+import pkgutil
+import types
+import typing
 
-from flask import Flask, Response, redirect, request, session, url_for
+from flask import Flask
+from flask import redirect
+from flask import request
+from flask import Response
+from flask import session
+from flask import url_for
 from flask_oauthlib.contrib.client import OAuth
+
 
 app = Flask(__name__)
 
-app.config.from_pyfile('config.py', silent=True)
+app.config.from_pyfile("config.py", silent=True)
 
-if app.config['ENV'] != 'production':
-    os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
+if app.config["ENV"] != "production":
+    os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
+
 
 @app.before_first_request
 def load_plugins():
-    print('load the plugins once here?')
+    print("load the plugins once here?")
 
-@app.route('/liveness')
+
+@app.route("/liveness")
 def status():
-    return Response(json.dumps({"ok": True}), status=200, mimetype='application/json')
+    return Response(json.dumps({"ok": True}), status=200, mimetype="application/json")
+
 
 def list_targets(targets):
     descriptions = []
 
     for plugin_name, plugin_targets in targets.items():
         for target_name, target in plugin_targets.items():
-            description = PluginService.describe_target(plugin_name, target_name, target)
+            description = PluginService.describe_target(
+                plugin_name, target_name, target
+            )
             descriptions.append(description)
 
-    return Response(json.dumps(descriptions), status=200, mimetype='application/json')
+    return Response(json.dumps(descriptions), status=200, mimetype="application/json")
 
-@app.route('/v1/auths')
+
+@app.route("/v1/auths")
 def list_auths():
     return list_targets(PluginService.available_auths_by_plugin())
 
-@app.route('/v1/commands')
+
+@app.route("/v1/commands")
 def list_commands():
     return list_targets(PluginService.available_commands_by_plugin())
+
 
 def auth_handler(plugin_display_name, auth_name, params):
     auth = PluginService.auth_named(plugin_display_name, auth_name)
@@ -57,43 +76,53 @@ def auth_handler(plugin_display_name, auth_name, params):
 
         return handler
 
-@app.route('/v1/auth/<plugin_display_name>/<auth_name>')
+
+@app.route("/v1/auth/<plugin_display_name>/<auth_name>")
 def do_auth(plugin_display_name, auth_name):
     params = request.args.to_dict()
-    our_redirect_url = params['redirect_url']
-    session['redirect_url'] = our_redirect_url
+    our_redirect_url = params["redirect_url"]
+    session["redirect_url"] = our_redirect_url
 
     handler = auth_handler(plugin_display_name, auth_name, params)
     if handler is None:
-        return Response('Auth not found', status=404)
+        return Response("Auth not found", status=404)
 
     # TODO factor into handler
     # TODO namespace the keys
-    session['client_id'] = params['client_id']
-    session['client_secret'] = params['client_secret']
+    session["client_id"] = params["client_id"]
+    session["client_secret"] = params["client_secret"]
 
-    oauth_redirect_url = url_for('auth_callback', plugin_display_name=plugin_display_name, auth_name=auth_name, _external=True)
+    oauth_redirect_url = url_for(
+        "auth_callback",
+        plugin_display_name=plugin_display_name,
+        auth_name=auth_name,
+        _external=True,
+    )
 
     return handler.authorize(callback_uri=oauth_redirect_url)
 
-@app.route('/v1/auth/<plugin_display_name>/<auth_name>/callback')
+
+@app.route("/v1/auth/<plugin_display_name>/<auth_name>/callback")
 def auth_callback(plugin_display_name, auth_name):
     handler = auth_handler(plugin_display_name, auth_name, session)
     if handler is None:
-        return Response('Auth not found', status=404)
+        return Response("Auth not found", status=404)
 
     response = json.dumps(handler.authorized_response())
-    redirect_url = session['redirect_url']
+    redirect_url = session["redirect_url"]
 
     # TODO compare redirect_url to whitelist
 
-    return redirect(f'{redirect_url}?response={response}')
+    return redirect(f"{redirect_url}?response={response}")
 
-@app.route('/v1/do/<plugin_display_name>/<command_name>')
+
+@app.route("/v1/do/<plugin_display_name>/<command_name>")
 def do_command(plugin_display_name, command_name):
     command = PluginService.command_named(plugin_display_name, command_name)
     if command is None:
-        return json_error_response(f'Command not found: {plugin_display_name}:{command_name}', status=404)
+        return json_error_response(
+            f"Command not found: {plugin_display_name}:{command_name}", status=404
+        )
 
     params = request.args.to_dict()
     raw_task_data = params.pop('spiff__task_data', '{}')
@@ -102,28 +131,21 @@ def do_command(plugin_display_name, command_name):
     try:
         result = command(**params).execute(app.config, task_data)
     except Exception as e:
-        return json_error_response(f'Error encountered when executing {plugin_display_name}:{command_name} {str(e)}',
-                        status=404)
+        return json_error_response(
+            f"Error encountered when executing {plugin_display_name}:{command_name} {str(e)}",
+            status=404,
+        )
 
-    return Response(result['response'], mimetype=result['mimetype'], status=200)
+    return Response(result["response"], mimetype=result["mimetype"], status=200)
+
 
 def json_error_response(message, status):
-    resp = {
-        'error':message,
-        'status':status
-    }
+    resp = {"error": message, "status": status}
     return Response(json.dumps(resp), status=status)
 
 
-# TODO move out to own home
-import importlib
-import inspect
-import pkgutil
-import types
-import typing
-
 class PluginService:
-    PLUGIN_PREFIX = 'connector_'
+    PLUGIN_PREFIX = "connector_"
 
     @staticmethod
     def plugin_display_name(plugin_name):
@@ -132,44 +154,43 @@ class PluginService:
     @staticmethod
     def plugin_name_from_display_name(plugin_display_name):
         return PluginService.PLUGIN_PREFIX + plugin_display_name
-    
+
     @staticmethod
     def available_plugins():
         return {
             name: importlib.import_module(name)
-            for finder, name, ispkg
-            in pkgutil.iter_modules()
+            for finder, name, ispkg in pkgutil.iter_modules()
             if name.startswith(PluginService.PLUGIN_PREFIX)
         }
 
     @staticmethod
     def available_auths_by_plugin():
         return {
-                plugin_name: {
-                    auth_name: auth
-                    for auth_name, auth
-                    in PluginService.auths_for_plugin(plugin_name, plugin)
-                } 
-                for plugin_name, plugin
-                in PluginService.available_plugins().items()
+            plugin_name: {
+                auth_name: auth
+                for auth_name, auth in PluginService.auths_for_plugin(
+                    plugin_name, plugin
+                )
+            }
+            for plugin_name, plugin in PluginService.available_plugins().items()
         }
 
     @staticmethod
     def available_commands_by_plugin():
         return {
-                plugin_name: {
-                    command_name: command
-                    for command_name, command
-                    in PluginService.commands_for_plugin(plugin_name, plugin)
-                } 
-                for plugin_name, plugin
-                in PluginService.available_plugins().items()
+            plugin_name: {
+                command_name: command
+                for command_name, command in PluginService.commands_for_plugin(
+                    plugin_name, plugin
+                )
+            }
+            for plugin_name, plugin in PluginService.available_plugins().items()
         }
 
     @staticmethod
     def target_id(plugin_name, target_name):
         plugin_display_name = PluginService.plugin_display_name(plugin_name)
-        return f'{plugin_display_name}/{target_name}'
+        return f"{plugin_display_name}/{target_name}"
 
     @staticmethod
     def auth_named(plugin_display_name, auth_name):
@@ -178,7 +199,7 @@ class PluginService:
 
         try:
             return available_auths_by_plugin[plugin_name][auth_name]
-        except:
+        except Exception:
             return None
 
     @staticmethod
@@ -188,7 +209,7 @@ class PluginService:
 
         try:
             return available_commands_by_plugin[plugin_name][command_name]
-        except:
+        except Exception:
             return None
 
     @staticmethod
@@ -206,19 +227,21 @@ class PluginService:
 
     @staticmethod
     def targets_for_plugin(plugin_name, plugin, target_package_name):
-        for module_name, module in PluginService.modules_for_plugin_in_package(plugin, target_package_name):
+        for module_name, module in PluginService.modules_for_plugin_in_package(
+            plugin, target_package_name
+        ):
             for member_name, member in inspect.getmembers(module, inspect.isclass):
                 if member.__module__ == module_name:
                     yield member_name, member
 
     @staticmethod
     def auths_for_plugin(plugin_name, plugin):
-        yield from PluginService.targets_for_plugin(plugin_name, plugin, 'auths')
+        yield from PluginService.targets_for_plugin(plugin_name, plugin, "auths")
 
     @staticmethod
     def commands_for_plugin(plugin_name, plugin):
         # TODO check if class has an execute method before yielding
-        yield from PluginService.targets_for_plugin(plugin_name, plugin, 'commands')
+        yield from PluginService.targets_for_plugin(plugin_name, plugin, "commands")
 
     @staticmethod
     def param_annotation_desc(param):
@@ -265,13 +288,11 @@ class PluginService:
     @staticmethod
     def callable_params_desc(kallable):
         sig = inspect.signature(kallable)
-        params_to_skip = ['self', 'kwargs']
+        params_to_skip = ["self", "kwargs"]
         sig_params = filter(
             lambda param: param.name not in params_to_skip, sig.parameters.values()
         )
-        params = [
-            PluginService.param_annotation_desc(param) for param in sig_params
-        ]
+        params = [PluginService.param_annotation_desc(param) for param in sig_params]
 
         return params
 
@@ -279,8 +300,8 @@ class PluginService:
     def describe_target(plugin_name, target_name, target):
         parameters = PluginService.callable_params_desc(target.__init__)
         target_id = PluginService.target_id(plugin_name, target_name)
-        return {'id': target_id, 'parameters': parameters}
+        return {"id": target_id, "parameters": parameters}
 
 
-if __name__ == '__main__':
-    app.run(host='localhost', port=5000)
+if __name__ == "__main__":
+    app.run(host="localhost", port=5000)
