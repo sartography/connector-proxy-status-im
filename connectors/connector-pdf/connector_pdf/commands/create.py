@@ -56,7 +56,7 @@ class CreatePDFAndUploadToS3:
             aws_secret_access_key, 
             pdf_result['response'],
             aws_bucket,
-            self.aws_object_name).execute(config)
+            self.aws_object_name).execute(config, task_data)
 
         if aws_result['status'] != '200':
             return aws_result
