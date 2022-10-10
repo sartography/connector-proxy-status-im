@@ -1,6 +1,6 @@
 """UploadFile."""
-from botocore.exceptions import ClientError
-from connector_aws.auths.simpleAuth import SimpleAuth
+from botocore.exceptions import ClientError  # type: ignore
+from connector_aws.auths.simpleAuth import SimpleAuth  # type: ignore
 
 
 class UploadFileData:

@@ -3,16 +3,16 @@ import json
 from datetime import datetime
 from datetime import timedelta
 
-from xero_python.accounting import AccountingApi
+from xero_python.accounting import AccountingApi  # type: ignore
 from xero_python.accounting import Contact
 from xero_python.accounting import Invoice
 from xero_python.accounting import Invoices
 from xero_python.accounting import LineItem
-from xero_python.api_client import ApiClient
-from xero_python.api_client.configuration import Configuration
-from xero_python.api_client.oauth2 import OAuth2Token
-from xero_python.api_client.serializer import serialize
-from xero_python.identity import IdentityApi
+from xero_python.api_client import ApiClient  # type: ignore
+from xero_python.api_client.configuration import Configuration  # type: ignore
+from xero_python.api_client.oauth2 import OAuth2Token  # type: ignore
+from xero_python.api_client.serializer import serialize  # type: ignore
+from xero_python.identity import IdentityApi  # type: ignore
 
 #
 # Sample response

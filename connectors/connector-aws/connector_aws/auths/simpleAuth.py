@@ -1,6 +1,6 @@
 """SimpleAuth."""
-import boto3
-from botocore.config import Config
+import boto3  # type: ignore
+from botocore.config import Config  # type: ignore
 
 
 class SimpleAuth:

@@ -2,7 +2,7 @@
 import json
 from dataclasses import dataclass
 
-import requests
+import requests  # type: ignore
 from flask import current_app
 
 

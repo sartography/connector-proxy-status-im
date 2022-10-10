@@ -2,7 +2,7 @@
 from io import BytesIO
 
 from connector_aws.commands.uploadFile import UploadFileData
-from xhtml2pdf import pisa
+from xhtml2pdf import pisa  # type: ignore
 
 
 class CreatePDF:

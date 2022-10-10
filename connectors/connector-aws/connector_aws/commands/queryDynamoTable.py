@@ -1,7 +1,7 @@
 """QueryDynamoTable."""
 import json
 
-from connector_aws.auths.simpleAuth import SimpleAuth
+from connector_aws.auths.simpleAuth import SimpleAuth  # type: ignore
 
 
 class QueryDynamoTable:
