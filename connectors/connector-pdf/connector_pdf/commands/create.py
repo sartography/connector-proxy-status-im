@@ -1,4 +1,6 @@
 from io import BytesIO
+from jinja2 import BaseLoader, Environment
+from markdown2 import markdown
 from xhtml2pdf import pisa
 
 from connector_aws.commands.uploadFile import UploadFileData
@@ -10,7 +12,17 @@ class CreatePDF:
     def execute(self, config):
         buf = BytesIO()
 
-        pisa_status = pisa.CreatePDF(self.template, dest=buf)
+        # TODO this will be provided in an upcoming pr
+        task_data = {
+            'name': 'Bob',
+            'amount': '123',
+        }
+
+        html_string = markdown(self.template)
+        html_template = Environment(loader=BaseLoader).from_string(html_string)
+        html_content = html_template.render(**task_data)
+
+        pisa_status = pisa.CreatePDF(html_content, dest=buf)
 
         if pisa_status.err:
             return {
