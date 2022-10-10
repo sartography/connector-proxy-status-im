@@ -16,7 +16,7 @@ class GetPayRate:
     def __init__(self, employee_id: str):
         self.employee_id = employee_id
 
-    def execute(self, config):
+    def execute(self, config, task_data):
         api_key = config['BAMBOOHR_API_KEY']
         subdomain = config['BAMBOOHR_SUBDOMAIN']
 

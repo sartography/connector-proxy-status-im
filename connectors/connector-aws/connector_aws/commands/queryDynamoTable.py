@@ -23,7 +23,7 @@ class QueryDynamoTable:
         self.table = self.dynamodb.Table(table_name)
         self.key = key
 
-    def execute(self, config):
+    def execute(self, config, task_data):
         result = self.table.get_item(Key={"primaryKeyName": self.key})
         if 'ResponseMetadata' in result:
             del result['ResponseMetadata']

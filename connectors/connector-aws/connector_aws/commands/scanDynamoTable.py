@@ -20,7 +20,7 @@ class ScanDynamoTable:
         self.dynamodb = SimpleAuth('dynamodb', access_key, secret_key).get_resource()
         self.table = self.dynamodb.Table(table_name)
 
-    def execute(self, config):
+    def execute(self, config, task_data):
         result = self.table.scan()
         if 'ResponseMetadata' in result:
             del result['ResponseMetadata']

@@ -10,7 +10,7 @@ class SendMessage:
     message_type: str
     recipient: str
 
-    def execute(self, config):
+    def execute(self, config, task_data):
         url = f'{current_app.config["WAKU_PROXY_BASE_URL"]}/sendMessage'
         headers = {'Accept': 'application/json', 'Content-type': 'application/json'}
         request_body = {"message": self.message, "recipient": self.recipient, "message_type": self.message_type}
