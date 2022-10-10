@@ -15,15 +15,9 @@ class CreatePDF:
         """__init__."""
         self.template = template
 
-    def execute(self, config):
+    def execute(self, config, task_data):
         """Execute."""
         buf = BytesIO()
-
-        # TODO this will be provided in an upcoming pr
-        task_data = {
-            "name": "Bob",
-            "amount": "123",
-        }
 
         html_string = markdown(self.template)
         html_template = Environment(loader=BaseLoader, autoescape=True).from_string(
@@ -55,13 +49,13 @@ class CreatePDFAndUploadToS3:
         self.template = template
         self.aws_object_name = aws_object_name
 
-    def execute(self, config):
+    def execute(self, config, task_data):
         """Execute."""
         aws_access_key_id = config["AWS_ACCESS_KEY_ID"]
         aws_secret_access_key = config["AWS_SECRET_ACCESS_KEY"]
         aws_bucket = config["AWS_INVOICE_S3_BUCKET"]
 
-        pdf_result = CreatePDF(self.template).execute(config)
+        pdf_result = CreatePDF(self.template).execute(config, task_data)
 
         if pdf_result["status"] != "200":
             return {
@@ -76,7 +70,7 @@ class CreatePDFAndUploadToS3:
             pdf_result["response"],
             aws_bucket,
             self.aws_object_name,
-        ).execute(config)
+        ).execute(config, task_data)
 
         if aws_result["status"] != "200":
             return aws_result

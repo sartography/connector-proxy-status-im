@@ -29,7 +29,7 @@ class AddDynamoItem:
         self.table = self.dynamodb.Table(table_name)
         self.item_data = json.loads(item_data)
 
-    def execute(self, config):
+    def execute(self, config, task_data):
         """Execute."""
         result = self.table.put_item(Item=self.item_data)
         if "ResponseMetadata" in result:

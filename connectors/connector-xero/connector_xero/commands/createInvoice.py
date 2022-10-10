@@ -159,7 +159,7 @@ class CreateInvoice:
         self.contact_email = contact_email
         self.amount = amount
 
-    def execute(self, config):
+    def execute(self, config, task_data):
         """Creates an invoice in xero."""
         client_id = config["XERO_CLIENT_ID"]
         client_secret = config["XERO_CLIENT_SECRET"]

@@ -125,8 +125,11 @@ def do_command(plugin_display_name, command_name):
         )
 
     params = request.args.to_dict()
+    raw_task_data = params.pop('spiff__task_data', '{}')
+    task_data = json.loads(raw_task_data)
+
     try:
-        result = command(**params).execute(app.config)
+        result = command(**params).execute(app.config, task_data)
     except Exception as e:
         return json_error_response(
             f"Error encountered when executing {plugin_display_name}:{command_name} {str(e)}",
