@@ -1,13 +1,18 @@
+"""CreateInvoice."""
 import json
+from datetime import datetime
+from datetime import timedelta
 
-from datetime import datetime, timedelta
-
-from xero_python.accounting import AccountingApi, Contact, LineItem, Invoice, Invoices
-from xero_python.api_client import ApiClient, serialize
-from xero_python.api_client.oauth2 import OAuth2Token
+from xero_python.accounting import AccountingApi
+from xero_python.accounting import Contact
+from xero_python.accounting import Invoice
+from xero_python.accounting import Invoices
+from xero_python.accounting import LineItem
+from xero_python.api_client import ApiClient
 from xero_python.api_client.configuration import Configuration
-from xero_python.identity import IdentityApi
+from xero_python.api_client.oauth2 import OAuth2Token
 from xero_python.api_client.serializer import serialize
+from xero_python.identity import IdentityApi
 
 #
 # Sample response
@@ -131,20 +136,23 @@ from xero_python.api_client.serializer import serialize
 #     ]
 # }
 
-class CreateInvoice:
-    def __init__(self, 
-        access_token, 
 
+class CreateInvoice:
+    """CreateInvoice."""
+
+    def __init__(
+        self,
+        access_token,
         description: str,
         contact_name: str,
         contact_email: str,
         amount: str,
-
-        #reference: str,
-        #created_date: str,
-        #due_date: str,
-        #account_code: str,
+        # reference: str,
+        # created_date: str,
+        # due_date: str,
+        # account_code: str,
     ):
+        """__init__."""
         self.access_token = access_token
         self.description = description
         self.contact_name = contact_name
@@ -153,8 +161,8 @@ class CreateInvoice:
 
     def execute(self, config):
         """Creates an invoice in xero."""
-        client_id = config['XERO_CLIENT_ID']
-        client_secret = config['XERO_CLIENT_SECRET']
+        client_id = config["XERO_CLIENT_ID"]
+        client_secret = config["XERO_CLIENT_SECRET"]
 
         access_token = json.loads(self.access_token)
 
@@ -162,7 +170,7 @@ class CreateInvoice:
             Configuration(
                 debug=True,
                 oauth2_token=OAuth2Token(
-                    client_id=sclient_id, client_secret=client_secret
+                    client_id=client_id, client_secret=client_secret
                 ),
             ),
             pool_threads=1,
@@ -170,46 +178,50 @@ class CreateInvoice:
 
         @api_client.oauth2_token_getter
         def obtain_xero_oauth2_token():
+            """Obtain_xero_oauth2_token."""
             return access_token
 
         @api_client.oauth2_token_saver
         def store_xero_oauth2_token(token):
-            access_token = token
+            """Store_xero_oauth2_token."""
+            access_token = token  # noqa
 
         api_instance = AccountingApi(api_client)
-        summarize_errors = 'True'
+        summarize_errors = "True"
         unitdp = 2
         date_value = datetime.now()
         due_date_value = date_value + timedelta(days=7)
 
-        contact = Contact(name = self.contact_name, 
-                email_address = self.contact_email)
+        contact = Contact(name=self.contact_name, email_address=self.contact_email)
 
         line_item = LineItem(
-            description = self.description,
-            quantity = 1.0,
-            unit_amount = self.amount,
-            account_code = "400",
-            tracking = [])
-    
-        line_items = []    
+            description=self.description,
+            quantity=1.0,
+            unit_amount=self.amount,
+            account_code="400",
+            tracking=[],
+        )
+
+        line_items = []
         line_items.append(line_item)
 
         invoice = Invoice(
-            type = "ACCREC",
-            contact = contact,
-            date = date_value,
-            due_date = due_date_value,
-            line_items = line_items,
-            reference = "Created by SpiffWorkflow",
-            status = "AUTHORISED")
+            type="ACCREC",
+            contact=contact,
+            date=date_value,
+            due_date=due_date_value,
+            line_items=line_items,
+            reference="Created by SpiffWorkflow",
+            status="AUTHORISED",
+        )
 
-        invoices = Invoices(invoices = [invoice])
+        invoices = Invoices(invoices=[invoice])
 
         try:
             xero_tenant_id = self._get_xero_tenant_id(api_client, access_token)
-            created_invoices = api_instance.create_invoices(xero_tenant_id, 
-                invoices, summarize_errors, unitdp)
+            created_invoices = api_instance.create_invoices(
+                xero_tenant_id, invoices, summarize_errors, unitdp
+            )
             response = json.dumps(serialize(created_invoices))
             status = 200
         except Exception as e:
@@ -217,13 +229,10 @@ class CreateInvoice:
             response = f'{{ "error": "{e.reason}" }}'
             status = 500
 
-        return {
-            'response': response,
-            'status': status,
-            'mimetype': 'application/json'
-        }
+        return {"response": response, "status": status, "mimetype": "application/json"}
 
     def _get_xero_tenant_id(self, api_client, token):
+        """_get_xero_tenant_id."""
         if not token:
             return None
 

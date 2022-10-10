@@ -1,8 +1,5 @@
+"""AddDynamoItem."""
 import json
-
-import boto3
-from botocore.config import Config
-from botocore.exceptions import ClientError
 
 from connector_aws.auths.simpleAuth import SimpleAuth
 
@@ -10,7 +7,9 @@ from connector_aws.auths.simpleAuth import SimpleAuth
 class AddDynamoItem:
     """Add a new record to a dynamo db table."""
 
-    def __init__(self, access_key: str, secret_key: str, table_name: str, item_data: str):
+    def __init__(
+        self, access_key: str, secret_key: str, table_name: str, item_data: str
+    ):
         """
         :param access_key: AWS Access Key
         :param secret_key: AWS Secret Key
@@ -20,8 +19,7 @@ class AddDynamoItem:
             and a response string.
         """
         # Get the service resource.
-        self.dynamodb = SimpleAuth('dynamodb', access_key, secret_key).get_resource()
-
+        self.dynamodb = SimpleAuth("dynamodb", access_key, secret_key).get_resource()
 
         # Instantiate a table resource object without actually
         # creating a DynamoDB table. Note that the attributes of this table
@@ -32,8 +30,9 @@ class AddDynamoItem:
         self.item_data = json.loads(item_data)
 
     def execute(self, config):
+        """Execute."""
         result = self.table.put_item(Item=self.item_data)
-        if 'ResponseMetadata' in result:
-            del result['ResponseMetadata']
+        if "ResponseMetadata" in result:
+            del result["ResponseMetadata"]
         result_str = json.dumps(result)
-        return dict(response=result_str, mimetype='application/json')
+        return dict(response=result_str, mimetype="application/json")
