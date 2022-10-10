@@ -1,7 +1,7 @@
 """GetPayRate."""
 import json
 
-import requests  # type: ignore
+import requests
 
 #
 # Sample response
