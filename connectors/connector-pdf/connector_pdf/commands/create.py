@@ -65,8 +65,6 @@ class CreatePDFAndUploadToS3:
             }
 
         aws_result = UploadFileData(
-            aws_access_key_id,
-            aws_secret_access_key,
             pdf_result["response"],
             aws_bucket,
             self.aws_object_name,
