@@ -8,22 +8,17 @@ class UploadFileData:
 
     def __init__(
         self,
-        access_key: str,
-        secret_key: str,
         file_data: bytes,
         bucket: str,
         object_name: str,
     ):
         """
-        :param access_key: AWS Access Key
-        :param secret_key: AWS Secret Key
         :param file_data: Contents of file to be uploaded
         :param bucket: Bucket to upload to
         :param object_name: S3 object name.
         :return: Json Data structure containing a http status code (hopefully '200' for success..)
             and a response string.
         """
-        self.client = SimpleAuth("s3", access_key, secret_key).get_resource()
         self.file_data = file_data
         self.bucket = bucket
         self.object_name = object_name
@@ -31,8 +26,9 @@ class UploadFileData:
     def execute(self, config, task_data):
         """Execute."""
         # Upload the file
+        client = SimpleAuth("s3", config).get_resource()
         try:
-            result = self.client.Object(self.bucket, self.object_name).put(
+            result = client.Object(self.bucket, self.object_name).put(
                 Body=self.file_data
             )
             status = str(result["ResponseMetadata"]["HTTPStatusCode"])
