@@ -15,7 +15,7 @@ class UploadFileData:
         object_name: str,
     ):
         """
-        :param file_data: Contents of file to be uploaded in task_data
+        :param file_data: Contents of file to be uploaded
         :param bucket: Bucket to upload to
         :param object_name: S3 object name.
         :return: Json Data structure containing a http status code (hopefully '200' for success..)
