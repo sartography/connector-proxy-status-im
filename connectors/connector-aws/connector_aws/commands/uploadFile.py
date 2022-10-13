@@ -10,7 +10,7 @@ class UploadFileData:
 
     def __init__(
         self,
-        file_data_key: bytes,
+        file_data: str,
         bucket: str,
         object_name: str,
     ):
@@ -21,15 +21,14 @@ class UploadFileData:
         :return: Json Data structure containing a http status code (hopefully '200' for success..)
             and a response string.
         """
-        self.file_data_key = file_data_key
+        self.file_data = file_data
         self.bucket = bucket
         self.object_name = object_name
 
     def execute(self, config, task_data):
         """Execute."""
 
-        raw_file_data = task_data[self.file_data_key]
-        file_data = self.parse_file_data(raw_file_data)
+        file_data = self.parse_file_data(self.file_data)
 
         # Upload the file
         client = SimpleAuth("s3", config).get_resource()
