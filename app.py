@@ -116,7 +116,7 @@ def auth_callback(plugin_display_name, auth_name):
     return redirect(f"{redirect_url}?response={response}")
 
 
-@app.route("/v1/do/<plugin_display_name>/<command_name>", methods = ["GET", "POST"])
+@app.route("/v1/do/<plugin_display_name>/<command_name>", methods=["GET", "POST"])
 def do_command(plugin_display_name, command_name):
     command = PluginService.command_named(plugin_display_name, command_name)
     if command is None:
@@ -125,7 +125,7 @@ def do_command(plugin_display_name, command_name):
         )
 
     params = request.values.to_dict()
-    raw_task_data = params.pop('spiff__task_data', '{}')
+    raw_task_data = params.pop("spiff__task_data", "{}")
     task_data = json.loads(raw_task_data)
 
     try:

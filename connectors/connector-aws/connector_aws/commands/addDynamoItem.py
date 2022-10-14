@@ -7,9 +7,7 @@ from connector_aws.auths.simpleAuth import SimpleAuth  # type: ignore
 class AddDynamoItem:
     """Add a new record to a dynamo db table."""
 
-    def __init__(
-        self, table_name: str, item_data: str
-    ):
+    def __init__(self, table_name: str, item_data: str):
         """
         :param table_name: The name of hte Dynamo DB table to add information to.
         :param item_data: The data to add, should be in json format.
@@ -18,7 +16,6 @@ class AddDynamoItem:
         """
         self.table_name = table_name
         self.item_data = item_data
-
 
     def execute(self, config, task_data):
         """Execute."""

@@ -51,8 +51,8 @@ class CreatePDFAndUploadToS3:
 
     def execute(self, config, task_data):
         """Execute."""
-        aws_access_key_id = config["AWS_ACCESS_KEY_ID"]
-        aws_secret_access_key = config["AWS_SECRET_ACCESS_KEY"]
+        config["AWS_ACCESS_KEY_ID"]
+        config["AWS_SECRET_ACCESS_KEY"]
         aws_bucket = config["AWS_INVOICE_S3_BUCKET"]
 
         pdf_result = CreatePDF(self.template).execute(config, task_data)
