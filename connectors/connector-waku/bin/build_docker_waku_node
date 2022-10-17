@@ -10,10 +10,18 @@ set -x
 
 script_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
+home_tmp_dir="/home/sartography/tmp_docker_build"
+mkdir -p "$home_tmp_dir"
 
-git clone https://github.com/status-im/status-go.git "${tmp_dir}/status-go"
-cd "${tmp_dir}/status-go"
+# docker installed by snap does not have access to /tmp so move it
+# https://github.com/docker-snap/docker-snap/issues/34
+mv "$tmp_dir" "$home_tmp_dir"
+
+git clone https://github.com/status-im/status-go.git "${home_tmp_dir}${tmp_dir}/status-go"
+cd "${home_tmp_dir}${tmp_dir}/status-go"
 git checkout feature/spiff-workflow
 
 cp "${script_dir}/../Dockerfile" .
 docker build -t spiffworkflow-waku-node:latest .
+
+rm -rf "$home_tmp_dir"
