@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+function error_handler() {
+  >&2 echo "Exited with BAD EXIT CODE '${2}' in ${0} script at line: ${1}."
+  exit "$2"
+}
+trap 'error_handler ${LINENO} $?' ERR
+set -o errtrace -o errexit -o nounset -o pipefail
+
+script_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
+
+git clone https://github.com/status-im/status-go.git "${tmp_dir}/status-go"
+cd "${tmp_dir}/status-go"
+git checkout feature/spiff-workflow
+# cd cmd/spiff-workflow
+
+cp "${script_dir}/../Dockerfile" .
+docker build -t spiffworkflow-waku-node:latest .
