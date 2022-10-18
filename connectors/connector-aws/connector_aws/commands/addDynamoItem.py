@@ -1,6 +1,6 @@
 """AddDynamoItem."""
 import json
-
+from decimal import Decimal
 from connector_aws.auths.simpleAuth import SimpleAuth  # type: ignore
 
 
@@ -25,7 +25,8 @@ class AddDynamoItem:
         # Get the service resource.
         self.dynamodb = SimpleAuth("dynamodb", config).get_resource()
         self.table = self.dynamodb.Table(self.table_name)
-        self.item_data = json.loads(self.item_data)
+        self.item_data = json.loads(self.item_data, parse_float=Decimal)
+
 
         result = self.table.put_item(Item=self.item_data)
         if "ResponseMetadata" in result:
