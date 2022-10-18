@@ -5,7 +5,7 @@ class OAuth:
     """OAuth."""
 
     def __init__(self):
-        """init."""
+        """__init__."""
         pass
 
     def app_description(self, config):
