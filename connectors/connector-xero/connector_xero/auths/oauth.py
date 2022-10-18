@@ -4,18 +4,17 @@
 class OAuth:
     """OAuth."""
 
-    def __init__(self, client_id: str, client_secret: str):
-        """__init__."""
-        self.client_id = client_id
-        self.client_secret = client_secret
+    def __init__(self):
+        """init."""
+        pass
 
-    def app_description(self):
+    def app_description(self, config):
         """App_description."""
         return {
             "name": "xero",
             "version": "2",
-            "client_id": self.client_id,
-            "client_secret": self.client_secret,
+            "client_id": config["XERO_CLIENT_ID"],
+            "client_secret": config["XERO_CLIENT_SECRET"],
             "endpoint_url": "https://api.xero.com/",
             "authorization_url": "https://login.xero.com/identity/connect/authorize",
             "access_token_url": "https://identity.xero.com/connect/token",
@@ -25,6 +24,7 @@ class OAuth:
             "accounting.contacts accounting.attachments assets projects",
         }
 
+    # TODO reconsider how this is working
     @staticmethod
     def filtered_params(params):
         """Filtered_params."""

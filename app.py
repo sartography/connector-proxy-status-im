@@ -59,8 +59,7 @@ def list_commands():
 def auth_handler(plugin_display_name, auth_name, params):
     auth = PluginService.auth_named(plugin_display_name, auth_name)
     if auth is not None:
-        handler_params = auth.filtered_params(params)
-        app_description = auth(**handler_params).app_description()
+        app_description = auth().app_description(app.config)
 
         # TODO right now this assumes Oauth.
         # would need to expand if other auth providers are used
@@ -89,8 +88,8 @@ def do_auth(plugin_display_name, auth_name):
 
     # TODO factor into handler
     # TODO namespace the keys
-    session["client_id"] = params["client_id"]
-    session["client_secret"] = params["client_secret"]
+    session["client_id"] = app.config["XERO_CLIENT_ID"]
+    session["client_secret"] = app.config["XERO_CLIENT_SECRET"]
 
     oauth_redirect_url = url_for(
         "auth_callback",
