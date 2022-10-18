@@ -199,6 +199,7 @@ class CreateInvoice:
             quantity=1.0,
             unit_amount=self.amount,
             account_code="400",
+            tax_type="NONE",
             tracking=[],
         )
 
