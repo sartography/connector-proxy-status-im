@@ -6,6 +6,21 @@ import requests
 from flask import current_app
 
 
+# Example:
+"""
+curl -XPOST http://localhost:8545 -H 'Content-type: application/json' \
+    '{
+     "jsonrpc": "2.0",
+     "method": "wakuext_sendOneToOneMessage",
+     "params": [
+         {
+         "id": "0xPUBLIC_KEY",
+         "message": "hello there, try http://167.172.242.138:7001/"
+         }
+     ],
+     "id": 1
+     }'
+"""
 @dataclass
 class SendMessage:
     """SendMessage."""
@@ -16,12 +31,14 @@ class SendMessage:
 
     def execute(self, config, task_data):
         """Execute."""
-        url = f'{current_app.config["WAKU_PROXY_BASE_URL"]}/sendMessage'
+        url = f'{current_app.config["WAKU_BASE_URL"]}'
         headers = {"Accept": "application/json", "Content-type": "application/json"}
         request_body = {
-            "message": self.message,
-            "recipient": self.recipient,
-            "message_type": self.message_type,
+            "jsonrpc": "2.0",
+            "method": self.message_type,
+            "params":[{"id": self.recipient,
+                "message": self.message}],
+            "id": 1
         }
 
         status_code = None
