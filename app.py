@@ -5,6 +5,7 @@ import os
 import pkgutil
 import types
 import typing
+import re
 
 from flask import Flask
 from flask import redirect
@@ -112,7 +113,12 @@ def auth_callback(plugin_display_name, auth_name):
 
     # TODO compare redirect_url to whitelist
 
-    return redirect(f"{redirect_url}?response={response}")
+    redirect_url_params_symbol = "?"
+    print(f"redirect_url: {redirect_url}")
+    if re.match(r".*\?.*", redirect_url):
+        redirect_url_params_symbol = "&"
+
+    return redirect(f"{redirect_url}{redirect_url_params_symbol}response={response}")
 
 
 @app.route("/v1/do/<plugin_display_name>/<command_name>", methods = ["GET", "POST"])
