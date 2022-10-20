@@ -114,7 +114,6 @@ def auth_callback(plugin_display_name, auth_name):
     # TODO compare redirect_url to whitelist
 
     redirect_url_params_symbol = "?"
-    print(f"redirect_url: {redirect_url}")
     if re.match(r".*\?.*", redirect_url):
         redirect_url_params_symbol = "&"
 
