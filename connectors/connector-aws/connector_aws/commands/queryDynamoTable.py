@@ -1,5 +1,5 @@
 """QueryDynamoTable."""
-import json
+import simplejson as json
 
 from boto3 import dynamodb
 from boto3.dynamodb.conditions import Key

@@ -123,9 +123,8 @@ def do_command(plugin_display_name, command_name):
             f"Command not found: {plugin_display_name}:{command_name}", status=404
         )
 
-    params = request.values.to_dict()
-    raw_task_data = params.pop('spiff__task_data', '{}')
-    task_data = json.loads(raw_task_data)
+    params = request.json
+    task_data = params.pop('spiff__task_data', '{}')
 
     try:
         result = command(**params).execute(app.config, task_data)
