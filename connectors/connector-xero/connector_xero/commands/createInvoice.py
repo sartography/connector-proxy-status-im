@@ -164,7 +164,12 @@ class CreateInvoice:
         client_id = config["XERO_CLIENT_ID"]
         client_secret = config["XERO_CLIENT_SECRET"]
 
+        # this should be called token_set to match the docs
         access_token = json.loads(self.access_token)
+
+        # need a mutable "store" to appease the libs
+        token_store = {}
+        token_store_key = "token"
 
         api_client = ApiClient(
             Configuration(
@@ -179,12 +184,19 @@ class CreateInvoice:
         @api_client.oauth2_token_getter
         def obtain_xero_oauth2_token():
             """Obtain_xero_oauth2_token."""
-            return access_token
+            return token_store[token_store_key]
 
         @api_client.oauth2_token_saver
         def store_xero_oauth2_token(token):
             """Store_xero_oauth2_token."""
-            access_token = token  # noqa
+            print(f"----1.5 {token['expires_at']}")
+            token_store[token_store_key] = token # noqa
+
+        store_xero_oauth2_token(access_token)
+
+        print(f"----1 {token_store[token_store_key]['expires_at']}")
+        api_client.refresh_oauth2_token()
+        print(f"----2 {token_store[token_store_key]['expires_at']}")
 
         api_instance = AccountingApi(api_client)
         summarize_errors = "True"
@@ -223,7 +235,11 @@ class CreateInvoice:
             created_invoices = api_instance.create_invoices(
                 xero_tenant_id, invoices, summarize_errors, unitdp
             )
-            response = json.dumps(serialize(created_invoices))
+            response = json.dumps({
+                "api_response": serialize(created_invoices),
+                "token_set": obtain_xero_oauth2_token(),
+                "auth": "xero/OAuth",
+            })
             status = 200
         except Exception as e:
             # TODO better error logging/reporting in debug
