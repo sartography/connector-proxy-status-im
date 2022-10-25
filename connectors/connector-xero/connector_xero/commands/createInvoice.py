@@ -189,14 +189,11 @@ class CreateInvoice:
         @api_client.oauth2_token_saver
         def store_xero_oauth2_token(token):
             """Store_xero_oauth2_token."""
-            print(f"----1.5 {token['expires_at']}")
             token_store[token_store_key] = token # noqa
 
         store_xero_oauth2_token(access_token)
 
-        print(f"----1 {token_store[token_store_key]['expires_at']}")
         api_client.refresh_oauth2_token()
-        print(f"----2 {token_store[token_store_key]['expires_at']}")
 
         api_instance = AccountingApi(api_client)
         summarize_errors = "True"
@@ -237,7 +234,7 @@ class CreateInvoice:
             )
             response = json.dumps({
                 "api_response": serialize(created_invoices),
-                "token_set": obtain_xero_oauth2_token(),
+                "refreshed_token_set": obtain_xero_oauth2_token(),
                 "auth": "xero/OAuth",
             })
             status = 200
