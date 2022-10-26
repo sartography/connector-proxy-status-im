@@ -27,15 +27,12 @@ class UploadFileData:
 
     def execute(self, config, task_data):
         """Execute."""
-
         file_data = self.parse_file_data(self.file_data)
 
         # Upload the file
         client = SimpleAuth("s3", config).get_resource()
         try:
-            result = client.Object(self.bucket, self.object_name).put(
-                Body=file_data
-            )
+            result = client.Object(self.bucket, self.object_name).put(Body=file_data)
             status = str(result["ResponseMetadata"]["HTTPStatusCode"])
 
             # TODO these can be improved
@@ -50,6 +47,7 @@ class UploadFileData:
         return {"response": response, "status": status, "mimetype": "application/json"}
 
     def parse_file_data(self, raw_data):
+        """Parse_file_data."""
         # looks like:
         # "data:application/pdf;name=Harmeet_13435%20(1).pdf;base64,JVBERi0xLjQKJZOMi54gUmVwb3J0TGFiIEdlb....="
         parts = raw_data.split(";", 2)

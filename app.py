@@ -3,9 +3,9 @@ import inspect
 import json
 import os
 import pkgutil
+import re
 import types
 import typing
-import re
 
 from flask import Flask
 from flask import redirect
@@ -120,7 +120,7 @@ def auth_callback(plugin_display_name, auth_name):
     return redirect(f"{redirect_url}{redirect_url_params_symbol}response={response}")
 
 
-@app.route("/v1/do/<plugin_display_name>/<command_name>", methods = ["GET", "POST"])
+@app.route("/v1/do/<plugin_display_name>/<command_name>", methods=["GET", "POST"])
 def do_command(plugin_display_name, command_name):
     command = PluginService.command_named(plugin_display_name, command_name)
     if command is None:
@@ -129,7 +129,7 @@ def do_command(plugin_display_name, command_name):
         )
 
     params = request.json
-    task_data = params.pop('spiff__task_data', '{}')
+    task_data = params.pop("spiff__task_data", "{}")
 
     try:
         result = command(**params).execute(app.config, task_data)
