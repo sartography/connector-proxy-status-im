@@ -21,6 +21,8 @@ curl -XPOST http://localhost:8545 -H 'Content-type: application/json' \
      "id": 1
      }'
 """
+
+
 @dataclass
 class SendMessage:
     """SendMessage."""
@@ -36,12 +38,11 @@ class SendMessage:
         request_body = {
             "jsonrpc": "2.0",
             "method": self.message_type,
-            "params":[{"id": self.recipient,
-                "message": self.message}],
-            "id": 1
+            "params": [{"id": self.recipient, "message": self.message}],
+            "id": 1,
         }
 
-        status_code = None
+        status_code = 0
         try:
             raw_response = requests.post(url, json.dumps(request_body), headers=headers)
             status_code = raw_response.status_code
@@ -49,6 +50,7 @@ class SendMessage:
             response = json.dumps(parsed_response)
         except Exception as ex:
             response = json.dumps({"error": str(ex)})
+            status_code = 500
 
         return {
             "response": response,
