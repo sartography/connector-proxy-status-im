@@ -3,6 +3,7 @@ import json
 
 import requests
 
+
 class GetEmployeeInfo:
     """GetPayRate."""
 
@@ -21,16 +22,22 @@ class GetEmployeeInfo:
         params = {"fields": self.fields, "onlyCurrent": "true"}
         auth = (api_key, "x")
 
+        status_code = 0
         try:
-            response = requests.get(url, params, headers=headers, auth=auth)
-        except Exception:
-            response = '{ "error": "Invalid Employee ID" }'
+            raw_response = requests.get(url, params, headers=headers, auth=auth)
+            status_code = raw_response.status_code
+            parsed_response = json.loads(raw_response.text)
+            response = json.dumps(parsed_response)
+        except Exception as ex:
+            response = json.dumps({"error": str(ex)})
+            status_code = 500
 
         return {
             "response": response,
-            "status": response.status_code,
+            "status": status_code,
             "mimetype": "application/json",
         }
+
 
 #
 # Sample response
@@ -53,16 +60,23 @@ class GetPayRate:
 
     def execute(self, config, task_data):
         """Execute."""
-
+        status_code = 0
         try:
-            response = GetEmployeeInfo(self.employee_id, "payRate").execute(config, task_data)
-            parsed_response = json.loads(response["response"].text)
+            response = GetEmployeeInfo(self.employee_id, "payRate").execute(
+                config, task_data
+            )
+            parsed_response = json.loads(response["response"])
             pay_rate = parsed_response["payRate"]
             pay_rate_parts = pay_rate.split(" ")
             parsed_response["amount"] = pay_rate_parts[0]
             parsed_response["currency"] = pay_rate_parts[1]
-            response["response"] = json.dumps(parsed_response)
-        except Exception:
-            response = '{ "error": "Invalid Employee ID" }'
+            response = json.dumps(parsed_response)
+        except Exception as ex:
+            response = json.dumps({"error": str(ex)})
+            status_code = 500
 
-        return response
+        return {
+            "response": response,
+            "status": status_code,
+            "mimetype": "application/json",
+        }
