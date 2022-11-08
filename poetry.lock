@@ -965,6 +965,25 @@ lint = ["docutils-stubs", "flake8", "mypy"]
 test = ["pytest"]
 
 [[package]]
+name = "spiff-connector"
+version = "0.1.0"
+description = "A blueprint that can allow (and limit) SpiffWorkflow's Service Tasks access to an organizations API's, such as connections to AWS Services and existing applications."
+category = "main"
+optional = false
+python-versions = "^3.10"
+develop = false
+
+[package.dependencies]
+Flask = "^2.2"
+Flask-OAuthlib = "^0.9.6"
+
+[package.source]
+type = "git"
+url = "https://github.com/sartography/spiff-connector"
+reference = "HEAD"
+resolved_reference = "c6b9ac76e95f6baccdefc607f7ef52e694441c32"
+
+[[package]]
 name = "stevedore"
 version = "4.0.0"
 description = "Manage dynamic plugins for Python applications"
@@ -1128,7 +1147,7 @@ urllib3 = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "7af7da296343ef94eca9f2f421e50d361f73e4259b33635a873b0138413a9696"
+content-hash = "64e60d418666cbf93c481185525fd267a43885750f11cd0b47c69f233886840a"
 
 [metadata.files]
 alabaster = [
@@ -1690,6 +1709,7 @@ sphinxcontrib-serializinghtml = [
     {file = "sphinxcontrib-serializinghtml-1.1.5.tar.gz", hash = "sha256:aa5f6de5dfdf809ef505c4895e51ef5c9eac17d0f287933eb49ec495280b6952"},
     {file = "sphinxcontrib_serializinghtml-1.1.5-py2.py3-none-any.whl", hash = "sha256:352a9a00ae864471d3a7ead8d7d79f5fc0b57e8b3f95e9867eb9eb28999b92fd"},
 ]
+spiff-connector = []
 stevedore = [
     {file = "stevedore-4.0.0-py3-none-any.whl", hash = "sha256:87e4d27fe96d0d7e4fc24f0cbe3463baae4ec51e81d95fbe60d2474636e0c7d8"},
     {file = "stevedore-4.0.0.tar.gz", hash = "sha256:f82cc99a1ff552310d19c379827c2c64dd9f85a38bcd5559db2470161867b786"},
