@@ -1,6 +1,7 @@
 import os
+
+from spiffworkflow_proxy.blueprint import proxy_blueprint
 from flask import Flask
-from spiff_connector.spiff_connector_blueprint import spiff_connector_blueprint
 
 app = Flask(__name__)
 
@@ -12,7 +13,7 @@ if app.config["ENV"] != "production":
 # Use the SpiffConnector Blueprint, which will auto-discover any
 # connector-* packages and provide API endpoints for listing and executing
 # available services.
-app.register_blueprint(spiff_connector_blueprint)
+app.register_blueprint(proxy_blueprint)
 
 if __name__ == "__main__":
     app.run(host="localhost", port=5000)

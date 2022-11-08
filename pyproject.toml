@@ -18,7 +18,7 @@ Flask-OAuthlib = "^0.9.6"
 Flask-Session = "^0.4.0"
 types-requests = "^2.28.11.2"
 simplejson = "^3.17.6"
-spiff-connector = {git = "https://github.com/sartography/spiff-connector"}
+spiffworkflow-proxy = {git = "https://github.com/sartography/spiffworkflow-proxy"}
 
 [tool.poetry.dev-dependencies]
 
