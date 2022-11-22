@@ -10,7 +10,7 @@ set -x
 
 script_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 tmp_dir=$(mktemp -d -t ci-XXXXXXXXXX)
-home_tmp_dir="/home/sartography/tmp_docker_build"
+home_tmp_dir="${HOME}/tmp_docker_build"
 mkdir -p "$home_tmp_dir"
 
 # docker installed by snap does not have access to /tmp so move it
