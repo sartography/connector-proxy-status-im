@@ -10,8 +10,7 @@ RUN mkdir -p /go/src/github.com/status-im/status-go
 WORKDIR /go/src/github.com/status-im/status-go
 ADD . .
 # RUN cd cmd/spiff-workflow && go build --mod=vendor
-
-RUN cd cmd/spiff-workflow && perl -pi -e "s/params.RopstenNetworkID/params.GoerliNetworkID/g" main.go && perl -pi -e "s/params.RinkebyNetworkID/params.GoerliNetworkID/g" main.go && go build --mod=vendor -tags gowaku_skip_migrations
+RUN cd cmd/spiff-workflow && go build --mod=vendor -tags gowaku_skip_migrations
 
 # Copy the binary to the second image
 FROM alpine:latest
