@@ -11,13 +11,14 @@ Flask = "^2.2.2"
 connector-xero = {develop=true, path="connectors/connector-xero"}
 connector-bamboohr = {develop=true, path="connectors/connector-bamboohr"}
 connector-waku = {develop=true, path="connectors/connector-waku"}
-connector-aws = {develop=true, path="connectors/connector-aws"}
+connector-aws = { git = "https://github.com/sartography/connector-aws.git"}
 
 gunicorn = "^20.1.0"
 Flask-OAuthlib = "^0.9.6"
 Flask-Session = "^0.4.0"
 types-requests = "^2.28.11.2"
 simplejson = "^3.17.6"
+spiffworkflow-proxy = {git = "https://github.com/sartography/spiffworkflow-proxy"}
 
 [tool.poetry.dev-dependencies]
 
