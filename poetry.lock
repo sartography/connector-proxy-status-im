@@ -960,7 +960,7 @@ Flask-OAuthlib = "^0.9.6"
 type = "git"
 url = "https://github.com/sartography/spiffworkflow-proxy"
 reference = "HEAD"
-resolved_reference = "5e4926030cf6f2808ddb8e65527168dd914e5fc3"
+resolved_reference = "2182c826dc4c155db5ab36dc77613550cd6870e1"
 
 [[package]]
 name = "stevedore"
@@ -1520,7 +1520,6 @@ requests = [
 requests-oauthlib = [
     {file = "requests-oauthlib-1.1.0.tar.gz", hash = "sha256:eabd8eb700ebed81ba080c6ead96d39d6bdc39996094bd23000204f6965786b0"},
     {file = "requests_oauthlib-1.1.0-py2.py3-none-any.whl", hash = "sha256:be76f2bb72ca5525998e81d47913e09b1ca8b7957ae89b46f787a79e68ad5e61"},
-    {file = "requests_oauthlib-1.1.0-py3.7.egg", hash = "sha256:490229d14a98e1b69612dcc1a22887ec14f5487dc1b8c6d7ba7f77a42ce7347b"},
 ]
 ruamel-yaml = [
     {file = "ruamel.yaml-0.17.21-py3-none-any.whl", hash = "sha256:742b35d3d665023981bd6d16b3d24248ce5df75fdb4e2924e93a05c1f8b61ca7"},
