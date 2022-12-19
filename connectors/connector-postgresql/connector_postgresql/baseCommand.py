@@ -1,3 +1,4 @@
+import json
 import psycopg2
 
 class BaseCommand:
@@ -38,6 +39,15 @@ class BaseCommand:
             # psycopg2.extras.execute_batch(cursor, sql, vars_list)
             # https://www.psycopg.org/docs/extras.html#fast-exec
             conn.commit()
+
+        return self._execute(sql, config, handler)
+
+    def fetchall(self, sql, config):
+        def prep_results(results):
+            return list(map(list, results))
+        def handler(conn, cursor):
+            cursor.execute(sql)
+            return json.dumps(prep_results(cursor.fetchall()))
 
         return self._execute(sql, config, handler)
 
