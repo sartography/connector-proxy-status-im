@@ -42,14 +42,32 @@ class BaseCommand:
 
         return self._execute(sql, config, handler)
 
-    def fetchall(self, sql, config):
+    def fetchall(self, sql, config, values):
         def prep_results(results):
             return list(map(list, results))
         def handler(conn, cursor):
-            cursor.execute(sql)
+            cursor.execute(sql, values)
             return json.dumps(prep_results(cursor.fetchall()))
 
         return self._execute(sql, config, handler)
+
+    def build_where_clause(self, schema):
+        where_configs = schema.get("where", [])
+        if len(where_configs) == 0:
+            return "", None
+        
+        operators = set(["=", "!=", "<", ">"])
+        
+        def build_where_part(where_config):
+            column, operator, value = where_config
+            if operator not in operators:
+                raise Exception(f"Unsupported operator '{operator}' in where clause")
+            return (f"{column} {operator} %s", value)
+        
+        where_parts = map(build_where_part, where_configs)
+        columns, values = zip(*where_parts)
+        
+        return f"WHERE {' AND '.join(columns)}", values
 
     def _get_db_connection_str(self, config):
         database = config["POSTGRESQL_DB_NAME"]

@@ -13,10 +13,10 @@ class SelectValues(BaseCommand):
     def execute(self, config, task_data):
 
         columns = ",".join(self.schema["columns"])
+        where_clause, values = self.build_where_clause(self.schema)
 
         # TODO: build properly with SQL().format(Identifier(name))
         # https://www.psycopg.org/docs/usage.html#passing-parameters-to-sql-queries
-        # TODO: where
-        sql = f"SELECT {columns} FROM {self.table_name};"
+        sql = f"SELECT {columns} FROM {self.table_name} {where_clause};"
 
-        return self.fetchall(sql, config)
+        return self.fetchall(sql, config, values)
