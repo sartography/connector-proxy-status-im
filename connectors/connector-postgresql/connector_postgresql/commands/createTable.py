@@ -17,12 +17,11 @@ class CreateTable(BaseCommand):
         # https://www.psycopg.org/docs/usage.html#passing-parameters-to-sql-queries
         sql = f"CREATE TABLE {self.table_name} ({columns});"
 
-        response, status = self.execute_query(sql, config)
-
-        return {"response": response, "status": status, "mimetype": "application/json"}
+        return self.execute_query(sql, config)
 
     def _column_definitions(self, schema):
         def column_defintion(column):
+            # TODO: allow column type/constraints to be specified
             return f"{column} VARCHAR"
 
         column_names = schema["columns"]

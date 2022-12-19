@@ -19,6 +19,4 @@ class InsertValues(BaseCommand):
         # https://www.psycopg.org/docs/usage.html#passing-parameters-to-sql-queries
         sql = f"INSERT INTO {self.table_name} ({columns}) VALUES {placeholders};"
 
-        response, status = self.execute_batch(sql, config, value_lists)
-
-        return {"response": response, "status": status, "mimetype": "application/json"}
+        return self.execute_batch(sql, config, value_lists)

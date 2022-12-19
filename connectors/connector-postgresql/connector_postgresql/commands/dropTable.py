@@ -15,6 +15,5 @@ class DropTable(BaseCommand):
         # https://www.psycopg.org/docs/usage.html#passing-parameters-to-sql-queries
         sql = f"DROP TABLE {self.table_name};"
 
-        response, status = self.execute_query(sql, config)
+        return self.execute_query(sql, config)
 
-        return {"response": response, "status": status, "mimetype": "application/json"}

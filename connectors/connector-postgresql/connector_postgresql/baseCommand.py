@@ -3,40 +3,17 @@ import psycopg2
 class BaseCommand:
     """BaseCommand."""
 
-    def execute_query(self, sql, config):
-        status = 200
-        result = '{"result": "ok"}'
-
+    def _execute(self, sql, config, handler):
         try:
             conn = psycopg2.connect(self._get_db_connection_str(config))
             with conn.cursor() as cursor:
-                cursor.execute(sql)
-                conn.commit()
-                if cursor.rowcount >= 0:
-                    result = f'{{"result": "{cursor.rowcount} rows affected"}}'
-        except Exception as e:
-            status = 500
-            # TODO: better error message, e has no reason and str repr contains quotes
-            result = '{"error": "Error executing sql statement"}'
-        finally:
-            conn.close()
-
-        return (result, status)
-
-    # TODO: refactor with execute_query
-    def execute_batch(self, sql, config, vars_list):
-        status = 200
-        response = '{"result": "ok"}'
-
-        try:
-            conn = psycopg2.connect(self._get_db_connection_str(config))
-            with conn.cursor() as cursor:
-                cursor.executemany(sql, vars_list)
-                # TODO: look more into getting this to work instead
-                # psycopg2.extras.execute_batch(cursor, sql, vars_list)
-                conn.commit()
-                if cursor.rowcount >= 0:
-                    response = f'{{"result": "{cursor.rowcount} rows affected"}}'
+                response = handler(conn, cursor)
+                if response is None:
+                    if cursor.rowcount >= 0:
+                        response = f'{{"result": "{cursor.rowcount} rows affected"}}'
+                    else:
+                        response = '{"result": "ok"}'
+            status = 200
         except Exception as e:
             raise e
             status = 500
@@ -45,7 +22,24 @@ class BaseCommand:
         finally:
             conn.close()
 
-        return (response, status)
+        return {"response": response, "status": status, "mimetype": "application/json"}
+
+    def execute_query(self, sql, config):
+        def handler(conn, cursor):
+            cursor.execute(sql)
+            conn.commit()
+
+        return self._execute(sql, config, handler)
+
+    def execute_batch(self, sql, config, vars_list):
+        def handler(conn, cursor):
+            cursor.executemany(sql, vars_list)
+            # TODO: look more into getting this to work instead
+            # psycopg2.extras.execute_batch(cursor, sql, vars_list)
+            # https://www.psycopg.org/docs/extras.html#fast-exec
+            conn.commit()
+
+        return self._execute(sql, config, handler)
 
     def _get_db_connection_str(self, config):
         database = config["POSTGRESQL_DB_NAME"]
