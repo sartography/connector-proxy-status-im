@@ -17,7 +17,7 @@ class CreateTable(BaseCommand):
         # https://www.psycopg.org/docs/usage.html#passing-parameters-to-sql-queries
         sql = f"CREATE TABLE {self.table_name} ({columns});"
 
-        (response, status) = self.perform_query(sql, config)
+        response, status = self.execute_query(sql, config)
 
         return {"response": response, "status": status, "mimetype": "application/json"}
 
