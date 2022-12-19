@@ -25,9 +25,9 @@ class BaseCommand:
 
         return {"response": response, "status": status, "mimetype": "application/json"}
 
-    def execute_query(self, sql, config):
+    def execute_query(self, sql, config, values=None):
         def handler(conn, cursor):
-            cursor.execute(sql)
+            cursor.execute(sql, values)
             conn.commit()
 
         return self._execute(sql, config, handler)
