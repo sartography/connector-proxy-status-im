@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "connector-postgresql"
+version = "0.1.0"
+description = ""
+authors = ["Jon Herron <jon.herron@yahoo.com>"]
+packages = [{include = "connector_postgresql"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+psycopg2 = "^2.9.5"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

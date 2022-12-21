@@ -11,6 +11,7 @@ Flask = "^2.2.2"
 connector-xero = {develop=true, path="connectors/connector-xero"}
 connector-bamboohr = {develop=true, path="connectors/connector-bamboohr"}
 connector-waku = {develop=true, path="connectors/connector-waku"}
+connector-postgresql = {develop=true, path="connectors/connector-postgresql"}
 connector-aws = { git = "https://github.com/sartography/connector-aws.git"}
 
 gunicorn = "^20.1.0"
