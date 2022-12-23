@@ -3,7 +3,14 @@ FROM ghcr.io/sartography/python:3.11
 RUN pip install poetry
 RUN useradd _gunicorn --no-create-home --user-group
 
-# postgresql-client is required to poetry install (psycopg2)
+# libpq-dev for pg_config executable, which is needed for psycopg2
+RUN set -xe \
+  && apt-get update -q \
+  && apt-get install -y -q \
+        libpq-dev
+
+# remove packages that are not needed in production.
+# just for security. won't help image size.
 RUN set -xe \
   && apt-get remove -y \
   gcc \
