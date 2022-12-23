@@ -3,16 +3,21 @@ FROM ghcr.io/sartography/python:3.11
 RUN pip install poetry
 RUN useradd _gunicorn --no-create-home --user-group
 
+# postgresql-client is required to poetry install (psycopg2)
+RUN set -xe \
+  && apt-get remove -y \
+  gcc \
+  libssl-dev \
+  postgresql-client \
+  python3-dev \
+  && apt-get autoremove -y \
+  && apt-get clean -y \
+  && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 ADD pyproject.toml poetry.lock /app/
 ADD connectors /app/connectors
 RUN poetry install
-
-RUN set -xe \
-  && apt-get remove -y gcc python3-dev libssl-dev \
-  && apt-get autoremove -y \
-  && apt-get clean -y \
-  && rm -rf /var/lib/apt/lists/*
 
 COPY . /app/
 
