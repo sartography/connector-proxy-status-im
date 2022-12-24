@@ -9,6 +9,17 @@ RUN set -xe \
   && apt-get install -y -q \
         libpq-dev
 
+WORKDIR /app
+ADD pyproject.toml poetry.lock /app/
+ADD connectors /app/connectors
+RUN poetry install
+
+COPY . /app/
+
+# run poetry install again AFTER copying the app into the image
+# otherwise it does not know what the main app module is
+RUN poetry install
+
 # remove packages that are not needed in production.
 # just for security. won't help image size.
 RUN set -xe \
@@ -20,16 +31,5 @@ RUN set -xe \
   && apt-get autoremove -y \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /app
-ADD pyproject.toml poetry.lock /app/
-ADD connectors /app/connectors
-RUN poetry install
-
-COPY . /app/
-
-# run poetry install again AFTER copying the app into the image
-# otherwise it does not know what the main app module is
-RUN poetry install
 
 CMD ./bin/boot_server_in_docker
