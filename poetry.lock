@@ -192,6 +192,24 @@ type = "directory"
 url = "connectors/connector-bamboohr"
 
 [[package]]
+name = "connector-http"
+version = "0.1.0"
+description = "Make HTTP Requests available to SpiffWorkflow Service Tasks"
+category = "main"
+optional = false
+python-versions = "^3.11"
+develop = false
+
+[package.dependencies]
+requests = "^2.28.1"
+
+[package.source]
+type = "git"
+url = "https://github.com/sartography/connector-http.git"
+reference = "HEAD"
+resolved_reference = "2857c82601128ccbd02a2003497b11c2bb2b98a3"
+
+[[package]]
 name = "connector-postgresql"
 version = "0.1.0"
 description = ""
@@ -1142,7 +1160,7 @@ urllib3 = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.11"
-content-hash = "8b488545ca555216a365341b4250dad16beb21d0c7933502fc96ea806533dca1"
+content-hash = "d6c6f9ac5f94be8bc88bb5867fabd07e174cfdc4f68f1af0bf420fba11af3e3a"
 
 [metadata.files]
 alabaster = [
@@ -1209,6 +1227,7 @@ colorama = [
 ]
 connector-aws = []
 connector-bamboohr = []
+connector-http = []
 connector-postgresql = []
 connector-waku = []
 connector-xero = []
