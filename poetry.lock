@@ -207,7 +207,7 @@ requests = "^2.28.1"
 type = "git"
 url = "https://github.com/sartography/connector-http.git"
 reference = "HEAD"
-resolved_reference = "2857c82601128ccbd02a2003497b11c2bb2b98a3"
+resolved_reference = "986180a75d88f06eef1cd4b84e9b2b96cd6dd6d4"
 
 [[package]]
 name = "connector-postgresql"
