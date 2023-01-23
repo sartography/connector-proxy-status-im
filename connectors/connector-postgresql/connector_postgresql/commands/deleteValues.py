@@ -1,11 +1,14 @@
 import json
 
+from typing import Any
+from typing import Dict
+
 from connector_postgresql.baseCommand import BaseCommand
 
 class DeleteValues(BaseCommand):
     """DeleteValues."""
 
-    def __init__(self, table_name: str, schema: str):
+    def __init__(self, table_name: str, schema: Dict[str, Any]):
         """__init__."""
         self.table_name = table_name
         self.schema = schema
