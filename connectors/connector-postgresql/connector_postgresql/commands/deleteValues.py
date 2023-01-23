@@ -8,7 +8,7 @@ class DeleteValues(BaseCommand):
     def __init__(self, table_name: str, schema: str):
         """__init__."""
         self.table_name = table_name
-        self.schema = json.loads(schema)
+        self.schema = schema
 
     def execute(self, config, task_data):
         where_clause, values = self.build_where_clause(self.schema)
