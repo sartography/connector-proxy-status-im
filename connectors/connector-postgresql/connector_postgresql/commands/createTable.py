@@ -1,14 +1,17 @@
 import json
 
+from typing import Any
+from typing import Dict
+
 from connector_postgresql.baseCommand import BaseCommand
 
 class CreateTable(BaseCommand):
     """CreateTable."""
 
-    def __init__(self, table_name: str, schema: str):
+    def __init__(self, table_name: str, schema: Dict[str, Any]):
         """__init__."""
         self.table_name = table_name
-        self.schema = json.loads(schema)
+        self.schema = schema
 
     def execute(self, config, task_data):
 
