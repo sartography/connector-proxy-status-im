@@ -45,7 +45,6 @@ class SendMessage:
                 "id": 1,
             }
 
-            status_code = 0
             try:
                 raw_response = requests.post(url, json.dumps(request_body), headers=headers)
                 status_code = raw_response.status_code

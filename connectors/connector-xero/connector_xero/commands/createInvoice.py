@@ -196,7 +196,7 @@ class CreateInvoice:
         api_client.refresh_oauth2_token()
 
         api_instance = AccountingApi(api_client)
-        summarize_errors = "True"
+        summarize_errors = True
         unitdp = 2
         date_value = datetime.now()
         due_date_value = date_value + timedelta(days=7)
@@ -242,7 +242,7 @@ class CreateInvoice:
             status = 200
         except Exception as e:
             # TODO better error logging/reporting in debug
-            response = f'{{ "error": "{e.reason}" }}'
+            response = f'{{ "error": "{e}" }}'
             status = 500
 
         return {"response": response, "status": status, "mimetype": "application/json"}

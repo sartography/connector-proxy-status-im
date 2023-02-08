@@ -22,7 +22,6 @@ class GetEmployeeInfo:
         params = {"fields": self.fields, "onlyCurrent": "true"}
         auth = (api_key, "x")
 
-        status_code = 0
         try:
             raw_response = requests.get(url, params, headers=headers, auth=auth)
             status_code = raw_response.status_code
