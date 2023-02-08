@@ -16,7 +16,6 @@ class BaseCommand:
                         response = '{"result": "ok"}'
             status = 200
         except Exception as e:
-            raise e
             status = 500
             # TODO: better error message, e has no reason and str repr contains quotes
             response = '{"error": "Error executing sql statement"}'
@@ -56,7 +55,7 @@ class BaseCommand:
         if len(where_configs) == 0:
             return "", None
         
-        operators = set(["=", "!=", "<", ">"])
+        operators = {"=", "!=", "<", ">"}
         
         def build_where_part(where_config):
             column, operator, value = where_config
