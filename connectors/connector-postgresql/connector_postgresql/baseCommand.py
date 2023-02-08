@@ -61,7 +61,7 @@ class BaseCommand:
             column, operator, value = where_config
             if operator not in operators:
                 raise Exception(f"Unsupported operator '{operator}' in where clause")
-            return (f"{column} {operator} {value}")
+            return (f"{column} {operator} %s", value)
         
         where_parts = map(build_where_part, where_configs)
         columns, values = zip(*where_parts)
