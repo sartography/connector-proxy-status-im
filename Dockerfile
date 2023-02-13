@@ -32,4 +32,4 @@ RUN set -xe \
   && apt-get clean -y \
   && rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ./bin/boot_server_in_docker
+ENTRYPOINT ["/app/bin/boot_server_in_docker"]
