@@ -13,4 +13,4 @@ docker \
   --name spiffworkflow-waku-node \
   -d \
   spiffworkflow-waku-node:latest \
-  --seed-phrase "waku ftw we are about to send a one on one message baby oh yeah"
+  --seed-phrase "search symbol claim wall raccoon mesh thumb luggage endorse live horse grid"
