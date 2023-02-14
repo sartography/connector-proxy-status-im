@@ -86,7 +86,7 @@ class GetCurrencies:
             status = 200
         except Exception as e:
             # TODO better error logging/reporting in debug
-            response = f'{{ "error": "{e.reason}" }}'
+            response = f'{{ "error": "{e}" }}'
             status = 500
 
         return {"response": response, "status": status, "mimetype": "application/json"}
