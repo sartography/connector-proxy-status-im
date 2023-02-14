@@ -32,7 +32,7 @@ class CreateTable(BaseCommand):
         columns = self._column_definitions(self.schema)
         # TODO: build properly with SQL().format(Identifier(name))
         # https://www.psycopg.org/docs/usage.html#passing-parameters-to-sql-queries
-        sql = f"CREATE TABLE {self.table_name} ({columns});"
+        sql = f"CREATE TABLE IF NOT EXISTS {self.table_name} ({columns});"
 
         return self.execute_query(sql, self.connection_config)
 
