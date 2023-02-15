@@ -1,6 +1,7 @@
 """SendMessage."""
 import json
 from dataclasses import dataclass
+from typing import Optional
 
 import requests
 from flask import current_app
@@ -31,7 +32,7 @@ class SendMessage:
     message_type: str
     recipient: list[str]
 
-    def send_message(self, message_type_to_use: str, rec: str, message_to_send: str) -> None:
+    def send_message(self, message_type_to_use: str, rec: str, message_to_send: Optional[str] = None) -> None:
         url = f'{current_app.config["WAKU_BASE_URL"]}'
         headers = {"Accept": "application/json", "Content-type": "application/json"}
         request_body = {
@@ -56,7 +57,12 @@ class SendMessage:
         responses = []
         all_calls_returned_200 = True
         for rec in self.recipient:
-            response, status_code = self.send_message('wakuext_sendContactRequest', rec, 'Contact Request')
+            # we also tried wakuext_sendContactRequest before wakuext_addContact.
+            # wakuext_sendContactRequest also took a third parameter after the rec parameter for the message that would appear
+            # alongside the contact request. But the message also appeared in your messages foreever and ever, which was not
+            # very compatible with sending a contact request with every message. Now, if you are not already a contact, you get
+            # a prompt to approve the request, and then you get all of the messages from the "spiff" user.
+            response, status_code = self.send_message('wakuext_addContact', rec)
             if status_code == 200:
                 response, status_code = self.send_message(self.message_type, rec, self.message)
             if status_code != 200:
