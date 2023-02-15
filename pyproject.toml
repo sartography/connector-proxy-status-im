@@ -20,7 +20,7 @@ Flask-OAuthlib = "^0.9.6"
 Flask-Session = "^0.4.0"
 types-requests = "^2.28.11.2"
 simplejson = "^3.17.6"
-spiffworkflow-proxy = {git = "https://github.com/sartography/spiffworkflow-proxy"}
+spiffworkflow-proxy = {git = "https://github.com/sartography/spiffworkflow-proxy", rev="lambda_demo"}
 
 [tool.poetry.dev-dependencies]
 
