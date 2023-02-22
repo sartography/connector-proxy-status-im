@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 import requests
+from requests.exceptions import HTTPError
 from flask import current_app
 
 
@@ -42,13 +43,19 @@ class SendMessage:
             "id": 1,
         }
 
+        response = {}
+        status_code = None
         try:
             raw_response = requests.post(url, json.dumps(request_body), headers=headers)
+            raw_response.raise_for_status()
             status_code = raw_response.status_code
             parsed_response = json.loads(raw_response.text)
             response = parsed_response
+        except HTTPError as ex:
+            status_code = ex.response.status_code
+            response['error'] = str(ex)
         except Exception as ex:
-            response = {"error": str(ex)}
+            response['error'] = str(ex)
             status_code = 500
         return (response, status_code)
 
