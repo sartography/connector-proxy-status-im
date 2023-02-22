@@ -33,7 +33,7 @@ class SendMessage:
     recipient: list[str]
 
     def send_message(self, message_type_to_use: str, rec: str, message_to_send: Optional[str] = None) -> None:
-        url = f'{current_app.config["WAKU_BASE_URL"]}'
+        url = f'{current_app.config["CONNECTOR_PROXY_WAKU_BASE_URL"]}'
         headers = {"Accept": "application/json", "Content-type": "application/json"}
         request_body = {
             "jsonrpc": "2.0",

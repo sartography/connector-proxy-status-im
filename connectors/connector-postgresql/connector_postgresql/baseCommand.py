@@ -69,10 +69,10 @@ class BaseCommand:
         return f"WHERE {' AND '.join(columns)}", values
 
     def _get_db_connection_str(self, config):
-        host = config["POSTGRESQL_HOST"]
-        port = config["POSTGRESQL_PORT"]
-        database = config["POSTGRESQL_DB_NAME"]
-        username = config["POSTGRESQL_USER_NAME"]
-        password = config["POSTGRESQL_PASSWORD"]
+        host = config["CONNECTOR_PROXY_POSTGRESQL_HOST"]
+        port = config["CONNECTOR_PROXY_POSTGRESQL_PORT"]
+        database = config["CONNECTOR_PROXY_POSTGRESQL_DB_NAME"]
+        username = config["CONNECTOR_PROXY_POSTGRESQL_USER_NAME"]
+        password = config["CONNECTOR_PROXY_POSTGRESQL_PASSWORD"]
         
         return f"dbname={database} user={username} password={password} host={host} port={port}"

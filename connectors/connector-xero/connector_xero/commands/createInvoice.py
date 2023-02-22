@@ -161,8 +161,8 @@ class CreateInvoice:
 
     def execute(self, config, task_data):
         """Creates an invoice in xero."""
-        client_id = config["XERO_CLIENT_ID"]
-        client_secret = config["XERO_CLIENT_SECRET"]
+        client_id = config["CONNECTOR_PROXY_XERO_CLIENT_ID"]
+        client_secret = config["CONNECTOR_PROXY_XERO_CLIENT_SECRET"]
 
         # this should be called token_set to match the docs
         access_token = json.loads(self.access_token)
