@@ -19,7 +19,7 @@ mv "$tmp_dir" "$home_tmp_dir"
 
 git clone https://github.com/status-im/status-go.git "${home_tmp_dir}${tmp_dir}/status-go"
 cd "${home_tmp_dir}${tmp_dir}/status-go"
-git checkout feature/spiff-workflow
+git checkout feature/spiff-workflow-rpc-fix
 
 cp "${script_dir}/../Dockerfile" .
 docker build -t spiffworkflow-waku-node:latest .
