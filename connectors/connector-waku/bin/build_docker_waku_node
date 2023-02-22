@@ -6,6 +6,8 @@ function error_handler() {
 }
 trap 'error_handler ${LINENO} $?' ERR
 set -o errtrace -o errexit -o nounset -o pipefail
+
+spiff_subdomain="${1:-}"
 set -x
 
 script_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
@@ -20,6 +22,23 @@ mv "$tmp_dir" "$home_tmp_dir"
 git clone https://github.com/status-im/status-go.git "${home_tmp_dir}${tmp_dir}/status-go"
 cd "${home_tmp_dir}${tmp_dir}/status-go"
 git checkout feature/spiff-workflow
+
+echo "PERLSRSTUFF"
+if [[ -n "$spiff_subdomain" ]]; then
+  echo "PERLSRSTUFF: found $spiff_subdomain"
+  waku_node_host="${spiff_subdomain}.spiffworkflow.org"
+  file_to_patch="cmd/spiffworkflow/main.go"
+  if [[ ! -f "$file_to_patch" ]]; then
+    >&2 echo "ERROR: expected $file_to_patch to exist"
+    exit 1
+  fi
+  perl -pi -e "s/\{\"localhost\", \"wakunode\"\}/{\"localhost\", \"wakunode\", \"$waku_node_host\"}/" "$file_to_patch"
+  if ! grep -Eq "localhost.*wakunode.*$waku_node_host" "$file_to_patch"; then
+    >&2 echo "ERROR: expected to find 'localhost.*wakunode.*$waku_node_host' in $file_to_patch"
+    exit 1
+  fi
+  echo "PERLSRSTUFF: done"
+fi
 
 cp "${script_dir}/../Dockerfile" .
 docker build -t spiffworkflow-waku-node:latest .

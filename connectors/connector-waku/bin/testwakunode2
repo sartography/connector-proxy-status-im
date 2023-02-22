@@ -1,0 +1,1 @@
+curl http://wakunode2.spiffworkflow.org -XPOST -H 'content-type: application/json' -d '{"jsonrpc":"2.0","method":"wakuext_sendOneToOneMessage","params":[{"id": "zQ3shh9nNUbuLzjzvjgUwxAKb3HEDMrVrNzyTW1ZUrFgcLhxc", "message": "hello dude what is happening now"}],"id":1}'
