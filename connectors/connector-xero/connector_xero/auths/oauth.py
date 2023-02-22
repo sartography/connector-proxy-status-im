@@ -12,8 +12,8 @@ class OAuth:
         return {
             "name": "xero",
             "version": "2",
-            "client_id": config["XERO_CLIENT_ID"],
-            "client_secret": config["XERO_CLIENT_SECRET"],
+            "client_id": config["CONNECTOR_PROXY_XERO_CLIENT_ID"],
+            "client_secret": config["CONNECTOR_PROXY_XERO_CLIENT_SECRET"],
             "endpoint_url": "https://api.xero.com/",
             "authorization_url": "https://login.xero.com/identity/connect/authorize",
             "access_token_url": "https://identity.xero.com/connect/token",
