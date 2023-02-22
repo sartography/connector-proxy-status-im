@@ -27,7 +27,7 @@ echo "PERLSRSTUFF"
 if [[ -n "$spiff_subdomain" ]]; then
   echo "PERLSRSTUFF: found $spiff_subdomain"
   waku_node_host="${spiff_subdomain}.spiffworkflow.org"
-  file_to_patch="cmd/spiffworkflow/main.go"
+  file_to_patch="cmd/spiff-workflow/main.go"
   if [[ ! -f "$file_to_patch" ]]; then
     >&2 echo "ERROR: expected $file_to_patch to exist"
     exit 1
