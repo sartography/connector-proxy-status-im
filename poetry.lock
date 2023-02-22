@@ -1002,7 +1002,7 @@ Flask-OAuthlib = "^0.9.6"
 type = "git"
 url = "https://github.com/sartography/spiffworkflow-proxy"
 reference = "HEAD"
-resolved_reference = "6cb2bbea923946cb2db3bf571a4ce28c776434b9"
+resolved_reference = "4cdbd3b37a15a49fbb043528ff3f9aeee9784b2f"
 
 [[package]]
 name = "stevedore"
