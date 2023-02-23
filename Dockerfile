@@ -1,15 +1,24 @@
-FROM ghcr.io/sartography/python:3.11
+FROM ghcr.io/sartography/python:3.11 AS base
 
-RUN pip install poetry
+ARG commit
+
+# Prepare Python virtual environment
+ENV VIRTUAL_ENV=/app/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
 RUN useradd _gunicorn --no-create-home --user-group
 
+WORKDIR /app
+
+FROM base AS setup
+
+RUN pip install poetry
 # libpq-dev for pg_config executable, which is needed for psycopg2
-RUN set -xe \
-  && apt-get update -q \
-  && apt-get install -y -q \
+RUN apt-get update -q \
+ && apt-get install -y -q \
         libpq-dev
 
-WORKDIR /app
 ADD pyproject.toml poetry.lock /app/
 ADD connectors /app/connectors
 RUN poetry install
@@ -20,16 +29,11 @@ COPY . /app/
 # otherwise it does not know what the main app module is
 RUN poetry install
 
-# remove packages that are not needed in production.
-# just for security. won't help image size.
-RUN set -xe \
-  && apt-get remove -y \
-  gcc \
-  libssl-dev \
-  postgresql-client \
-  python3-dev \
-  && apt-get autoremove -y \
-  && apt-get clean -y \
-  && rm -rf /var/lib/apt/lists/*
+FROM base AS final
+
+LABEL source="https://github.com/sartography/connector-proxy-status-im"
+LABEL description="Connector gateway for external services."
+
+COPY --from=setup /app /app
 
 ENTRYPOINT ["/app/bin/boot_server_in_docker"]
