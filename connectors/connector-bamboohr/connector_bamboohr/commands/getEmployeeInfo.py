@@ -7,20 +7,24 @@ import requests
 class GetEmployeeInfo:
     """GetPayRate."""
 
-    def __init__(self, employee_id: str, fields: str):
+    def __init__(self,
+        api_key: str,
+        subdomain: str,
+        employee_id: str,
+        fields: str
+    ):
         """__init__."""
+        self.api_key = api_key
+        self.subdomain = subdomain
         self.employee_id = employee_id
         self.fields = fields
 
     def execute(self, config, task_data):
         """Execute."""
-        api_key = config["BAMBOOHR_API_KEY"]
-        subdomain = config["BAMBOOHR_SUBDOMAIN"]
-
-        url = f"https://api.bamboohr.com/api/gateway.php/{subdomain}/v1/employees/{self.employee_id}"
+        url = f"https://api.bamboohr.com/api/gateway.php/{self.subdomain}/v1/employees/{self.employee_id}"
         headers = {"Accept": "application/json"}
         params = {"fields": self.fields, "onlyCurrent": "true"}
-        auth = (api_key, "x")
+        auth = (self.api_key, "x")
 
         try:
             raw_response = requests.get(url, params, headers=headers, auth=auth)

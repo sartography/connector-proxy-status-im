@@ -29,15 +29,18 @@ from xero_python.identity import IdentityApi  # type: ignore
 class GetCurrencies:
     """GetCurrencies."""
 
-    def __init__(self, access_token):
+    def __init__(self,
+        client_id: str,
+        client_secret: str,
+        access_token
+    ):
         """__init__."""
+        self.client_id = client_id
+        self.client_secret = client_secret
         self.access_token = access_token
 
     def execute(self, config, task_data):
         """Get currencies configured in xero."""
-        client_id = config["CONNECTOR_PROXY_XERO_CLIENT_ID"]
-        client_secret = config["CONNECTOR_PROXY_XERO_CLIENT_SECRET"]
-
         # this should be called token_set to match the docs
         access_token = json.loads(self.access_token)
 
@@ -49,7 +52,7 @@ class GetCurrencies:
             Configuration(
                 debug=True,
                 oauth2_token=OAuth2Token(
-                    client_id=client_id, client_secret=client_secret
+                    client_id=self.client_id, client_secret=self.client_secret
                 ),
             ),
             pool_threads=1,
@@ -86,7 +89,7 @@ class GetCurrencies:
             status = 200
         except Exception as e:
             # TODO better error logging/reporting in debug
-            response = f'{{ "error": "{e.reason}" }}'
+            response = f'{{ "error": "{e}" }}'
             status = 500
 
         return {"response": response, "status": status, "mimetype": "application/json"}

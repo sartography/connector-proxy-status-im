@@ -142,6 +142,8 @@ class CreateInvoice:
 
     def __init__(
         self,
+        client_id: str,
+        client_secret: str,
         access_token,
         description: str,
         contact_name: str,
@@ -153,6 +155,8 @@ class CreateInvoice:
         # account_code: str,
     ):
         """__init__."""
+        self.client_id = client_id
+        self.client_secret = client_secret
         self.access_token = access_token
         self.description = description
         self.contact_name = contact_name
@@ -161,9 +165,6 @@ class CreateInvoice:
 
     def execute(self, config, task_data):
         """Creates an invoice in xero."""
-        client_id = config["CONNECTOR_PROXY_XERO_CLIENT_ID"]
-        client_secret = config["CONNECTOR_PROXY_XERO_CLIENT_SECRET"]
-
         # this should be called token_set to match the docs
         access_token = json.loads(self.access_token)
 
@@ -175,7 +176,7 @@ class CreateInvoice:
             Configuration(
                 debug=True,
                 oauth2_token=OAuth2Token(
-                    client_id=client_id, client_secret=client_secret
+                    client_id=self.client_id, client_secret=self.client_secret
                 ),
             ),
             pool_threads=1,

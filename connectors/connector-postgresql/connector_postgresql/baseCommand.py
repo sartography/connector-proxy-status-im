@@ -1,6 +1,14 @@
 import json
 import psycopg2
 
+class ConnectionConfig:
+    def __init__(self, database, host, port, username, password):
+        self.database = database
+        self.host = host
+        self.port = port
+        self.user = username
+        self.password = password
+
 class BaseCommand:
     """BaseCommand."""
 
@@ -69,10 +77,4 @@ class BaseCommand:
         return f"WHERE {' AND '.join(columns)}", values
 
     def _get_db_connection_str(self, config):
-        host = config["CONNECTOR_PROXY_POSTGRESQL_HOST"]
-        port = config["CONNECTOR_PROXY_POSTGRESQL_PORT"]
-        database = config["CONNECTOR_PROXY_POSTGRESQL_DB_NAME"]
-        username = config["CONNECTOR_PROXY_POSTGRESQL_USER_NAME"]
-        password = config["CONNECTOR_PROXY_POSTGRESQL_PASSWORD"]
-        
-        return f"dbname={database} user={username} password={password} host={host} port={port}"
+        return f"dbname={config.database} user={config.user} password={config.password} host={config.host} port={config.port}"
