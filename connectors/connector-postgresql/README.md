@@ -183,3 +183,39 @@ The schema passed to the connector would be:
   ]
 }
 ```
+
+### DeleteValues
+
+Additional parameters:
+
+```
+schema: Dict[str, Any]
+```
+
+Deletes rows from a table with the provided optional where clause. The where clause is specified, and works, the same as described in `SelectValues`.
+
+
+### UpdateValues
+
+Additional parameters:
+
+```
+schema: Dict[str, Any]
+```
+
+Updates columns a table with the provided value and optional where clause. The where clause is specified, and works, the same as described in `SelectValues`.
+
+The schema expcets a `set` key with a value that is a dictionary. The keys in this dictionary are the column names and the values are the new value to set. 
+
+For example:
+
+```
+{
+  "set": {
+    "abbrev": "ZZ"
+  }, 
+  "where": [
+    ["abbrev", "=", "VA"]
+  ]
+}
+```
