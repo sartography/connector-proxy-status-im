@@ -164,7 +164,6 @@ dev=# select * from states where somenum = 33;
  country |  state   | abbrev | somenum 
 ---------+----------+--------+---------
  USA     | Georgia  | GA     |      33
- USA     | Virginia | VA     |      55
 (2 rows)
 
 ```
