@@ -2,7 +2,24 @@
 
 ## Commands
 
-### Create Table
+All commands require passing in the following parameters:
+
+```
+database_name: str
+database_host: str
+database_port: int
+database_user: str
+database_password: str
+table_name: str
+```
+
+### CreateTable
+
+Additional parameters:
+
+```
+schema: Dict[str, Any]
+```
 
 Creates a table with the provided column names and their [types](https://www.postgresql.org/docs/current/datatype.html).
 
@@ -25,7 +42,8 @@ dev=# \d states;
 The schema passed to the connector would be:
 
 ```
-{"column_definitions": [
+{
+  "column_definitions": [
     {
         "name": "country",
         "type": "varchar(255)",
@@ -42,5 +60,56 @@ The schema passed to the connector would be:
         "name": "somenum",
         "type": "int",
     }
-]}
+  ]
+}
+```
+
+### DropTable
+
+Drops a table.
+
+### InsertValues
+
+Additional parameters:
+
+```
+schema: Dict[str, Any]
+```
+
+Inserts values into a table with the provided column names and their values. Multiple records can be inserted per call.
+
+The schema parameter expects:
+
+| Key | Value |
+|-----|-------|
+| `columns` | A list of column names |
+| `values` | A list of lists of the values to insert. Order must match column order. |
+
+As an example, to insert the following data:
+
+```
+dev=# select * from states;
+ country |  state   | abbrev | somenum 
+---------+----------+--------+---------
+ USA     | Georgia  | GA     |      33
+ USA     | Virginia | VA     |      55
+(2 rows)
+
+```
+
+The schema passed to the connector would be:
+
+```
+{
+  "columns": [
+    "country",
+    "state",
+    "abbrev",
+    "somenum"
+  ], 
+  "values": [
+    ["USA", "Georgia", "GA", 33], 
+    ["USA", "Virginia", "VA", 55]
+  ]
+}
 ```
