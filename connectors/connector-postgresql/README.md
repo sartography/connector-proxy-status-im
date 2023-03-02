@@ -113,3 +113,74 @@ The schema passed to the connector would be:
   ]
 }
 ```
+### SelectValues
+
+Additional parameters:
+
+```
+schema: Dict[str, Any]
+```
+
+Selects values from a table with the provided column names and optional where clause.
+
+The schema parameter expects:
+
+| Key | Value |
+|-----|-------|
+| `columns` | A list of column names |
+| `where` | (optional) A list of lists of the column names, operator and values to filter the select. |
+
+Operators supported for where clauses are: `=, !=, <, >`
+
+As an example, to mimic the following select:
+
+```
+dev=# select * from states;
+ country |  state   | abbrev | somenum 
+---------+----------+--------+---------
+ USA     | Georgia  | GA     |      33
+ USA     | Virginia | VA     |      55
+(2 rows)
+
+```
+
+The schema passed to the connector would be:
+
+```
+{
+  "columns": [
+    "country",
+    "state",
+    "abbrev",
+    "somenum"
+  ]
+}
+```
+
+To mimic the following select:
+
+```
+dev=# select * from states where somenum = 33;
+ country |  state   | abbrev | somenum 
+---------+----------+--------+---------
+ USA     | Georgia  | GA     |      33
+ USA     | Virginia | VA     |      55
+(2 rows)
+
+```
+
+The schema passed to the connector would be:
+
+```
+{
+  "columns": [
+    "country",
+    "state",
+    "abbrev",
+    "somenum"
+  ],
+  "where": [
+    ["somenum", "=", 33]
+  ]
+}
+```
