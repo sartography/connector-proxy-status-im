@@ -38,10 +38,8 @@ class CreateTable(BaseCommand):
 
     def _column_definitions(self, schema):
         def column_defintion(column):
-            # TODO: allow column type/constraints to be specified
-            return f"{column} VARCHAR"
+            return f"{column['name']} {column['type']}"
 
-        column_names = schema["columns"]
-        column_definitions = map(column_defintion, column_names)
+        column_definitions = map(column_defintion, schema["column_definitions"])
         
         return ",".join(column_definitions)
