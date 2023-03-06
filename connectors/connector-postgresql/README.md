@@ -2,15 +2,13 @@
 
 ## Commands
 
-All commands require passing in the following parameters:
+All commands require passing in the postgress connection string:
 
 ```
-database_name: str
-database_host: str
-database_port: int
-database_user: str
-database_password: str
+database_connection_str: str
 ```
+
+Which is passed directly to `pyscopg2`. eg: `dbname=dev user=dev password=dev host=postgres-db port=5432`
 
 All commands except for `DoSQL` require `table_name: str` as well.
 

@@ -14,20 +14,11 @@ class DoSQL(BaseCommand):
     """DoSQL."""
 
     def __init__(self,
-        database_name: str,
-        database_host: str,
-        database_port: int,
-        database_user: str,
-        database_password: str,
+        database_connection_str: str,
         schema: Dict[str, Any]
     ):
         """__init__."""
-        self.connection_config = ConnectionConfig(
-            database_name, 
-            database_host, 
-            database_port, 
-            database_user, 
-            database_password)
+        self.database_connection_str = database_connection_str
         self.schema = schema
 
     def execute(self, config, task_data):
@@ -37,6 +28,6 @@ class DoSQL(BaseCommand):
         fetch_results = self.schema.get("fetch_results", False)
 
         if fetch_results:
-            return self.fetchall(sql, self.connection_config, values)
+            return self.fetchall(sql, self.database_connection_str, values)
 
-        return self.execute_query(sql, self.connection_config, values)
+        return self.execute_query(sql, self.database_connection_str, values)

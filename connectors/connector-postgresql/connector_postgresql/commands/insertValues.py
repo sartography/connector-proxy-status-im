@@ -9,21 +9,12 @@ class InsertValues(BaseCommand):
     """InsertValues."""
 
     def __init__(self,
-        database_name: str,
-        database_host: str,
-        database_port: int,
-        database_user: str,
-        database_password: str,
+        database_connection_str: str,
         table_name: str,
         schema: Dict[str, Any]
     ):
         """__init__."""
-        self.connection_config = ConnectionConfig(
-            database_name, 
-            database_host, 
-            database_port, 
-            database_user, 
-            database_password)
+        self.database_connection_str = database_connection_str
         self.table_name = table_name
         self.schema = schema
 
@@ -36,4 +27,4 @@ class InsertValues(BaseCommand):
         # https://www.psycopg.org/docs/usage.html#passing-parameters-to-sql-queries
         sql = f"INSERT INTO {self.table_name} ({columns}) VALUES {placeholders};"
 
-        return self.execute_batch(sql, self.connection_config, value_lists)
+        return self.execute_batch(sql, self.database_connection_str, value_lists)
