@@ -25,8 +25,7 @@ class BaseCommand:
             status = 200
         except Exception as e:
             status = 500
-            # TODO: better error message, e has no reason and str repr contains quotes
-            response = '{"error": "Error executing sql statement"}'
+            response = f'{"error": "Error executing sql statement: {e}"}'
         finally:
             conn.close()
 
