@@ -12,9 +12,9 @@ class ConnectionConfig:
 class BaseCommand:
     """BaseCommand."""
 
-    def _execute(self, sql, config, handler):
+    def _execute(self, sql, conn_str, handler):
         try:
-            conn = psycopg2.connect(self._get_db_connection_str(config))
+            conn = psycopg2.connect(conn_str)
             with conn.cursor() as cursor:
                 response = handler(conn, cursor)
                 if response is None:
@@ -31,14 +31,14 @@ class BaseCommand:
 
         return {"response": response, "status": status, "mimetype": "application/json"}
 
-    def execute_query(self, sql, config, values=None):
+    def execute_query(self, sql, conn_str, values=None):
         def handler(conn, cursor):
             cursor.execute(sql, values)
             conn.commit()
 
-        return self._execute(sql, config, handler)
+        return self._execute(sql, conn_str, handler)
 
-    def execute_batch(self, sql, config, vars_list):
+    def execute_batch(self, sql, conn_str, vars_list):
         def handler(conn, cursor):
             cursor.executemany(sql, vars_list)
             # TODO: look more into getting this to work instead
@@ -46,16 +46,16 @@ class BaseCommand:
             # https://www.psycopg.org/docs/extras.html#fast-exec
             conn.commit()
 
-        return self._execute(sql, config, handler)
+        return self._execute(sql, conn_str, handler)
 
-    def fetchall(self, sql, config, values):
+    def fetchall(self, sql, conn_str, values):
         def prep_results(results):
             return list(map(list, results))
         def handler(conn, cursor):
             cursor.execute(sql, values)
             return json.dumps(prep_results(cursor.fetchall()))
 
-        return self._execute(sql, config, handler)
+        return self._execute(sql, conn_str, handler)
 
     def build_where_clause(self, schema):
         where_configs = schema.get("where", [])
@@ -74,6 +74,3 @@ class BaseCommand:
         columns, values = zip(*where_parts)
         
         return f"WHERE {' AND '.join(columns)}", values
-
-    def _get_db_connection_str(self, config):
-        return f"dbname={config.database} user={config.user} password={config.password} host={config.host} port={config.port}"
