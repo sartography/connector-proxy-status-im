@@ -10,8 +10,9 @@ database_host: str
 database_port: int
 database_user: str
 database_password: str
-table_name: str
 ```
+
+All commands except for `DoSQL` require `table_name: str` as well.
 
 ### CreateTable
 
@@ -219,3 +220,22 @@ For example:
   ]
 }
 ```
+
+### DoSQL
+
+Additional parameters:
+
+```
+schema: Dict[str, Any]
+```
+
+Performs a SQL statement of your chosing.
+
+The schema parameter expects:
+
+| Key | Value |
+|-----|-------|
+| `sql` | The SQL to `do`. Uses `%s` for variable bindings. |
+| `values` | (optional) A list of values to bind. |
+| `fetch_results` | (options) Bool to indicate if a list of results should be returned. |
+
