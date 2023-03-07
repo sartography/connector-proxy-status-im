@@ -1,1 +1,5 @@
-curl http://wakunode2.spiffworkflow.org -XPOST -H 'content-type: application/json' -d '{"jsonrpc":"2.0","method":"wakuext_sendOneToOneMessage","params":[{"id": "zQ3shh9nNUbuLzjzvjgUwxAKb3HEDMrVrNzyTW1ZUrFgcLhxc", "message": "hello dude what is happening now"}],"id":1}'
+# set display name
+# spiffworkflow-wakunode2:/# curl -XPOST http://localhost:8545 -H 'Content-type: application/json' -d '{"jsonrpc":"2.0","method":"wakuext_setDisplayName","params":["SpiffWorkflowTest"],"id":1}'
+# {"jsonrpc":"2.0","id":1,"result":null}
+
+curl http://wakunode2.spiffworkflow.org -XPOST -H 'content-type: application/json' -d '{"jsonrpc":"2.0","method":"wakuext_sendOneToOneMessage","params":[{"id": "zQ3shh9nNUbuLzjzvjgUwxAKb3HEDMrVrNzyTW1ZUrFgcLhxc", "message": "hello dude what is happening now thursday demo"}],"id":1}'
